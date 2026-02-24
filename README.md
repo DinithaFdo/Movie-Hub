@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Movie Hub
 
-## Getting Started
+Modern, cinematic movie streaming discovery UI built with Next.js App Router using:
 
-First, run the development server:
+- **TMDB** for discovery data (trending, popular, top-rated, now playing, search)
+- **VidSrc** for video embed playback
+- **Server-first caching strategy** tuned for Vercel free tier
+
+## Setup
+
+1. Copy the environment file:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Add your TMDB key in `.env.local`:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+TMDB_API_KEY=your_tmdb_api_key_here
+NEXT_PUBLIC_VIDSRC_BASE_URL=https://vidsrc.cc/v2/embed
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Install and run:
 
-## Learn More
+```bash
+pnpm install
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open http://localhost:3000.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+VidSrc URL pattern used by the app:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Movie: `${NEXT_PUBLIC_VIDSRC_BASE_URL}/movie/{tmdbId}`
+- TV: `${NEXT_PUBLIC_VIDSRC_BASE_URL}/tv/{tmdbId}/{season}/{episode}` (defaults to `1/1`)
 
-## Deploy on Vercel
+## Architecture
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Core structure:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `app/` → routes (`/`, `/watch/[type]/[id]`, `/api/search`)
+- `components/` → UI modules (layout, search, cards, skeletons, theme)
+- `lib/` → TMDB client, VidSrc URL builder, env helpers
+- `types/` → shared domain types
+
+Design goals:
+
+- Modular and scalable components
+- Clear server/client boundaries
+- Suspense + route loading for premium skeleton experience
+
+## Caching Strategy (Vercel-Friendly)
+
+Implemented recommendations:
+
+- TMDB fetches use `next.revalidate`:
+  - Trending: 1h
+  - Now Playing / Popular: 30m
+  - Top Rated: 4h
+  - Details: 12h
+  - Search API: 5m
+- Search route sets `Cache-Control: public, s-maxage=300, stale-while-revalidate=86400`
+
+Why this helps:
+
+- Reduces duplicate TMDB requests
+- Keeps perceived performance high
+- Protects free-tier quotas and limits origin pressure
+
+## Additional Recommendations
+
+- Add Redis (Upstash) for edge query caching if traffic grows.
+- Add auth + user watchlist with a DB (Neon/Postgres + Prisma).
+- Add error boundaries for external API/network faults.
+- Add analytics and A/B testing before award submissions.
