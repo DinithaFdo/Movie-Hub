@@ -82,7 +82,7 @@ export async function MovieRow({ id }: MovieRowProps) {
       </div>
 
       <div className="relative">
-        <div className="flex gap-4 overflow-x-auto px-4 sm:px-6 lg:px-8 pb-8 -mx-4 sm:-mx-6 lg:-mx-8 scrollbar-hide snap-x">
+        <div className="-mx-4 flex gap-4 overflow-x-hidden px-4 pb-8 snap-x sm:-mx-6 sm:px-6 lg:-mx-8 lg:overflow-x-auto lg:px-8 scrollbar-hide">
           {movies.slice(0, 15).map((movie, index) => (
             <div key={movie.id} className="snap-start">
               <MovieCard movie={movie} priority={index < 4} index={index} />

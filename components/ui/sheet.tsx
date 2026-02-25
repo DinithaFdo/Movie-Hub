@@ -18,7 +18,7 @@ function SheetOverlay({
   return (
     <Dialog.Overlay
       className={cn(
-        "fixed inset-0 z-50 bg-black/70 backdrop-blur-sm",
+        "fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-opacity duration-300 data-[state=closed]:opacity-0 data-[state=open]:opacity-100",
         className,
       )}
       {...props}
@@ -39,9 +39,9 @@ function SheetContent({
       <SheetOverlay />
       <Dialog.Content
         className={cn(
-          "fixed z-50 bg-[#111111] border border-[#2a2a2a] shadow-2xl transition-all",
+          "fixed z-50 border border-[#2a2a2a] bg-[#111111] shadow-2xl transition-all duration-300",
           side === "bottom" &&
-            "inset-x-0 bottom-0 rounded-t-2xl border-b-0 p-6 pb-8 data-[state=open]:animate-in data-[state=closed]:animate-out",
+            "inset-x-0 bottom-0 rounded-t-2xl border-b-0 p-6 pb-8 data-[state=closed]:translate-y-full data-[state=open]:translate-y-0",
           side === "right" && "inset-y-0 right-0 h-full w-3/4 max-w-sm p-6",
           className,
         )}

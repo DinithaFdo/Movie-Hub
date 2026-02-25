@@ -107,20 +107,20 @@ export function SeasonSelector({ mediaId, seasons }: SeasonSelectorProps) {
             ))}
           </div>
         ) : episodes.length > 0 ? (
-          <div className="grid gap-3 max-h-150 overflow-y-auto pr-2 custom-scrollbar">
+          <div className="grid gap-3 max-h-150 overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
             {episodes.map((ep) => (
               <div
                 key={ep.id}
                 onClick={() => handleEpisodeSelect(ep.episodeNumber)}
                 className={cn(
-                  "group flex cursor-pointer gap-4 rounded-lg border border-transparent p-3 transition-all hover:border-[#ffa31a]/40 hover:bg-[#ffa31a]/10",
+                  "group flex w-full min-w-0 cursor-pointer flex-col gap-3 rounded-lg border border-transparent p-3 transition-all hover:border-[#ffa31a]/40 hover:bg-[#ffa31a]/10 sm:flex-row sm:gap-4",
                   currentSeason === selectedSeason &&
                     currentEpisode === ep.episodeNumber
                     ? "border-[#ffa31a]/60 bg-[#ffa31a]/15"
                     : "bg-transparent",
                 )}
               >
-                <div className="relative h-20 w-36 shrink-0 overflow-hidden rounded-md bg-neutral-800">
+                <div className="relative h-36 w-full shrink-0 overflow-hidden rounded-md bg-neutral-800 sm:h-20 sm:w-36">
                   {ep.stillPath ? (
                     <Image
                       src={getTMDBImageUrl(ep.stillPath, "w300")}
@@ -142,9 +142,9 @@ export function SeasonSelector({ mediaId, seasons }: SeasonSelectorProps) {
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-center min-w-0 flex-1">
+                <div className="flex min-w-0 flex-1 flex-col justify-center">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-semibold text-white truncate max-w-50">
+                    <span className="line-clamp-2 text-sm font-semibold text-white sm:truncate sm:max-w-50">
                       {ep.episodeNumber}. {ep.name}
                     </span>
                     {currentSeason === selectedSeason &&
