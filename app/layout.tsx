@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 
-import { AppFooter } from "@/components/layout/app-footer";
 import { AppNavbar } from "@/components/layout/app-navbar";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { FavoritesProvider } from "@/context/favorites-context";
@@ -48,7 +47,6 @@ export default function RootLayout({
             <div className="page-bg min-h-screen overflow-x-clip">
               <AppNavbar />
               {children}
-              <AppFooter />
             </div>
           </FavoritesProvider>
         </ThemeProvider>

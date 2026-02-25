@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clapperboard, Film, Home, Star, Search, Tv } from "lucide-react";
+import { Clapperboard, Film, Menu, Home, Star, Search, Tv } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { LiveSearch } from "@/components/search/live-search";
@@ -38,7 +38,6 @@ const mobileNavItems = [
 
 export function AppNavbar() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const pathname = usePathname();
 
   return (
@@ -91,7 +90,7 @@ export function AppNavbar() {
               <Search size={18} />
             </Button>
 
-            <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
+            <Sheet>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
@@ -99,26 +98,7 @@ export function AppNavbar() {
                   aria-label="Open Menu"
                   className="text-white hover:text-[#ffa31a]"
                 >
-                  <span className="relative block h-5 w-5">
-                    <span
-                      className={cn(
-                        "absolute left-0 top-1/2 block h-0.5 w-5 -translate-y-2 bg-current transition-all duration-300",
-                        drawerOpen && "translate-y-0 rotate-45",
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        "absolute left-0 top-1/2 block h-0.5 w-5 bg-current transition-all duration-300",
-                        drawerOpen && "opacity-0",
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        "absolute left-0 top-1/2 block h-0.5 w-5 translate-y-2 bg-current transition-all duration-300",
-                        drawerOpen && "translate-y-0 -rotate-45",
-                      )}
-                    />
-                  </span>
+                  <Menu size={20} />
                 </Button>
               </SheetTrigger>
               <SheetContent
@@ -133,7 +113,6 @@ export function AppNavbar() {
                     <Link
                       key={item.label}
                       href={item.href}
-                      onClick={() => setDrawerOpen(false)}
                       className={cn(
                         "flex items-center gap-3 rounded-xl border px-4 py-4 text-base font-semibold",
                         pathname === item.href
