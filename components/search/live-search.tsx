@@ -83,7 +83,10 @@ export function LiveSearch() {
   }
 
   const shouldShowPanel = useMemo(
-    () => showResults && query.trim().length >= 2 && (isLoading || results.length > 0),
+    () =>
+      showResults &&
+      query.trim().length >= 2 &&
+      (isLoading || results.length > 0),
     [showResults, query, isLoading, results],
   );
 
@@ -101,9 +104,9 @@ export function LiveSearch() {
           className="h-11 w-full rounded-full border border-white/10 bg-white/5 pl-11 pr-4 text-sm text-white placeholder:text-gray-400 focus:outline-none focus:bg-black/80 focus:border-[#00f3ff]/50 focus:ring-1 focus:ring-[#00f3ff]/30 transition-all duration-300 backdrop-blur-sm"
         />
         {isLoading && (
-           <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-             <Loader2 className="h-4 w-4 animate-spin text-[#00f3ff]" />
-           </div>
+          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+            <Loader2 className="h-4 w-4 animate-spin text-[#00f3ff]" />
+          </div>
         )}
       </div>
 
@@ -131,10 +134,12 @@ export function LiveSearch() {
                       sizes="44px"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-white/5 text-[10px] text-gray-500 font-medium">No Image</div>
+                    <div className="flex h-full w-full items-center justify-center bg-white/5 text-[10px] text-gray-500 font-medium">
+                      No Image
+                    </div>
                   )}
                 </div>
-                
+
                 <div className="flex-1 min-w-0 py-1">
                   <h4 className="text-sm font-medium text-white truncate group-hover:text-[#00f3ff] transition-colors">
                     {movie.title}
@@ -158,7 +163,7 @@ export function LiveSearch() {
             ))
           ) : (
             <div className="px-4 py-8 text-center text-sm text-gray-400">
-              No results found for "{query}"
+              No results found for &quot;{query}&quot;
             </div>
           )}
         </div>

@@ -29,7 +29,7 @@ export async function HeroFeatured() {
       <div className="relative z-10 flex h-full flex-col justify-center px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
         <div className="animate-fade-in max-w-3xl space-y-6">
           <div className="flex items-center gap-3">
-            <span className="bg-[#00f3ff]/10 border border-[#00f3ff]/20 text-[#00f3ff] px-3 py-1 text-xs font-bold tracking-widest uppercase rounded">
+            <span className="rounded border border-[#ffa31a]/40 bg-[#ffa31a]/15 px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#ffa31a]">
               Featured
             </span>
             <div className="flex items-center gap-1 text-yellow-400 text-sm font-semibold">
@@ -55,14 +55,14 @@ export async function HeroFeatured() {
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href={`/watch/${featuredMovie.mediaType}/${featuredMovie.id}`}
-              className="group flex items-center gap-3 rounded-xl bg-[#00f3ff] px-8 py-4 text-base font-bold text-black transition-all hover:bg-white hover:scale-105 hover:shadow-[0_0_20px_rgba(0,243,255,0.4)]"
+              className="group flex items-center gap-3 rounded-xl border border-[#ffa31a] bg-[#ffa31a] px-8 py-4 text-base font-bold text-black transition-all duration-300 hover:scale-105 hover:bg-[#ffbe55] hover:shadow-[0_0_20px_rgba(255,163,26,0.35)]"
             >
               <Play size={20} fill="#000" className="group-hover:fill-black" />
               Watch Now
             </Link>
             <Link
               href={`/watch/${featuredMovie.mediaType}/${featuredMovie.id}`}
-              className="group flex items-center gap-3 rounded-xl bg-white/10 backdrop-blur-md px-8 py-4 text-base font-bold text-white transition-all hover:bg-white/20 hover:scale-105 border border-white/10"
+              className="group flex items-center gap-3 rounded-xl border border-[#ffa31a] bg-black/30 px-8 py-4 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-[#ffa31a]/15 hover:text-[#ffd38a]"
             >
               <Info size={20} />
               More Info

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Star, Play, Calendar, Heart } from "lucide-react";
+import { Star, Calendar, Heart } from "lucide-react";
 import { getTMDBImageUrl } from "@/lib/tmdb";
 import type { MovieSummary } from "@/types/movie";
 import { useFavorites } from "@/context/favorites-context";
@@ -43,7 +43,7 @@ export function MovieCard({
       className="group relative w-40 md:w-50 shrink-0 cursor-pointer"
     >
       <Link href={`/watch/${movie.mediaType}/${movie.id}`}>
-        <div className="relative aspect-2/3 overflow-hidden rounded-xl bg-[#1a1a1a] shadow-lg transition-all duration-300 group-hover:shadow-[0_0_25px_rgba(0,243,255,0.2)]">
+        <div className="relative aspect-2/3 overflow-hidden rounded-xl bg-[#1a1a1a] shadow-lg transition-all duration-300 group-hover:shadow-[0_0_25px_rgba(255,163,26,0.22)]">
           <Image
             src={getTMDBImageUrl(movie.posterPath, "w500")}
             alt={movie.title}
@@ -66,9 +66,6 @@ export function MovieCard({
             >
               <Heart size={16} fill={favorite ? "currentColor" : "none"} />
             </button>
-            <div className="bg-black/60 backdrop-blur-md p-2 rounded-full text-[#00f3ff]">
-              <Play size={16} fill="#00f3ff" />
-            </div>
           </div>
 
           <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 flex flex-col gap-2">
@@ -87,14 +84,14 @@ export function MovieCard({
               </div>
             </div>
 
-            <button className="w-full py-1.5 rounded bg-linear-to-r from-[#00f3ff] to-[#7000ff] text-white text-xs font-bold uppercase tracking-wide">
+            <button className="w-full rounded bg-[#ffa31a] py-1.5 text-xs font-bold uppercase tracking-wide text-black transition-colors group-hover:bg-[#ffbe55]">
               Watch Now
             </button>
           </div>
         </div>
 
         <div className="mt-3 px-1">
-          <h3 className="text-sm font-bold text-white truncate group-hover:text-[#00f3ff] transition-colors">
+          <h3 className="text-sm font-bold text-white truncate transition-colors group-hover:text-[#ffd38a]">
             {movie.title}
           </h3>
           <p className="text-xs text-gray-500 capitalize">{movie.mediaType}</p>

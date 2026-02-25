@@ -56,13 +56,13 @@ export function MediaGrid({ initialMedia, type, title }: MediaGridProps) {
           <button
             onClick={loadMore}
             disabled={loading}
-            className="group relative px-8 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all active:scale-95 disabled:opacity-50"
+            className="group relative rounded-full border border-[#ffa31a]/60 bg-[#1a1a1a] px-8 py-3 transition-all duration-300 hover:bg-[#ffa31a]/15 hover:shadow-[0_0_18px_rgba(255,163,26,0.28)] active:scale-95 disabled:opacity-50"
           >
-            <span className="flex items-center gap-2 font-medium text-white group-hover:text-[#00f3ff] transition-colors">
+            <span className="flex items-center gap-2 font-medium text-white transition-colors group-hover:text-[#ffd38a]">
               {loading && <Loader2 className="animate-spin" size={18} />}
               {loading ? "Loading..." : "Load More"}
             </span>
-            <div className="absolute inset-0 rounded-full bg-linear-to-r from-[#00f3ff]/0 via-[#00f3ff]/10 to-[#7000ff]/0 opacity-0 group-hover:opacity-100 transition-opacity blur-md" />
+            <div className="absolute inset-0 rounded-full bg-linear-to-r from-[#ffa31a]/0 via-[#ffa31a]/20 to-[#ffc766]/0 opacity-0 transition-opacity group-hover:opacity-100 blur-md" />
           </button>
         ) : (
           <p className="text-gray-500">You&apos;ve reached the end.</p>

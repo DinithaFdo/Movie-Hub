@@ -23,25 +23,25 @@ const categoryConfig: Record<
     title: "Trending Now",
     subtitle: "Most watched movies this week",
     query: getTrendingMovies,
-    link: "/trending",
+    link: "/movies",
   },
   "now-playing": {
     title: "In Theaters",
     subtitle: "Watch the latest releases",
     query: getNowPlayingMovies,
-    link: "/now-playing",
+    link: "/movies",
   },
   popular: {
     title: "Popular on MovieHub",
     subtitle: "Everyone is talking about these",
     query: getPopularMovies,
-    link: "/popular",
+    link: "/movies",
   },
   "top-rated": {
     title: "Critically Acclaimed",
     subtitle: "All time favorites",
     query: getTopRatedMovies,
-    link: "/top-rated",
+    link: "/movies",
   },
 };
 
@@ -70,7 +70,7 @@ export async function MovieRow({ id }: MovieRowProps) {
         {config.link && (
           <Link
             href={config.link}
-            className="group flex items-center gap-1 text-sm font-semibold text-[#00f3ff] hover:text-white transition-colors"
+            className="group flex items-center gap-1 text-sm font-semibold text-[#ffa31a] transition-colors hover:text-[#ffd38a]"
           >
             View All{" "}
             <ChevronRight

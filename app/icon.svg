@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MovieHub favicon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffbe55"/>
+      <stop offset="100%" stop-color="#ffa31a"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bg)"/>
+  <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="#2d2d2d"/>
+
+  <g transform="translate(16 14)">
+    <rect x="0" y="6" width="32" height="24" rx="6" fill="url(#accent)"/>
+    <rect x="3" y="9" width="26" height="18" rx="4" fill="#121212" opacity="0.32"/>
+    <circle cx="7" cy="10" r="1.5" fill="#0a0a0a"/>
+    <circle cx="13" cy="10" r="1.5" fill="#0a0a0a"/>
+    <circle cx="19" cy="10" r="1.5" fill="#0a0a0a"/>
+    <circle cx="25" cy="10" r="1.5" fill="#0a0a0a"/>
+    <polygon points="13,14 23,18 13,22" fill="#0a0a0a"/>
+  </g>
+</svg>

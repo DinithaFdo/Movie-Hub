@@ -3,7 +3,6 @@ import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 
 import { AppNavbar } from "@/components/layout/app-navbar";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { AppPreloader } from "@/components/ui/app-preloader";
 import { FavoritesProvider } from "@/context/favorites-context";
 
 import "./globals.css";
@@ -22,6 +21,14 @@ export const metadata: Metadata = {
   title: "Movie Hub · Next Generation Streaming",
   description:
     "Modern movie streaming platform built with Next.js, TMDB, and VidSrc",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -36,7 +43,6 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ThemeProvider>
-          <AppPreloader />
           <FavoritesProvider>
             <div className="page-bg min-h-screen">
               <AppNavbar />
