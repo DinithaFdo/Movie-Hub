@@ -44,7 +44,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <FavoritesProvider>
-            <div className="page-bg min-h-screen">
+            <div className="page-bg min-h-screen overflow-x-clip">
               <AppNavbar />
               {children}
             </div>

@@ -36,6 +36,12 @@
   --font-heading: var(--font-sora);
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
 body {
   background-color: var(--bg-deep);
   color: var(--text-main);
