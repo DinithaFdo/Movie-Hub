@@ -105,8 +105,8 @@ export function LiveSearch({ className, isExpanded, onFocus, onBlur }: { classNa
   return (
     <div ref={containerRef} className={cn("relative w-full transition-all duration-300", className)}>
       <form className="relative group w-full" onSubmit={handleSubmit}>
-        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none z-10">
-          <Search className={cn("h-[18px] w-[18px] transition-colors", isExpanded ? "text-[#D4FF3E]" : "text-white")} />
+        <div className="absolute inset-y-0 left-0 w-10 flex items-center justify-center pointer-events-none z-10">
+          <Search className="h-[18px] w-[18px] transition-colors text-black" />
         </div>
         <input
           value={query}
@@ -120,13 +120,15 @@ export function LiveSearch({ className, isExpanded, onFocus, onBlur }: { classNa
           }}
           placeholder="Search movies, tv shows..."
           className={cn(
-            "h-10 rounded-full border bg-[#1A1A1D]/80 pl-10 pr-4 text-sm text-white placeholder:text-[#8A8A8E] focus:outline-none transition-all duration-300 backdrop-blur-xl shrink-0 placeholder:opacity-0 focus:placeholder:opacity-100",
-            isExpanded ? "w-[160px] sm:w-[260px] md:w-[320px] focus:bg-[#0D0D0F] focus:border-[#D4FF3E]/50 border-white/10" : "w-10 border-transparent text-transparent placeholder:text-transparent cursor-pointer hover:border-white/20"
+            "h-10 rounded-full border text-sm font-bold focus:outline-none transition-all duration-300 shrink-0 placeholder:opacity-0 focus:placeholder:opacity-100",
+            isExpanded 
+              ? "w-[160px] sm:w-[260px] md:w-[320px] pl-10 pr-4 bg-[#D4FF3E] text-black border-transparent placeholder:text-black/60 focus:bg-[#D4FF3E] shadow-[0_0_20px_rgba(212,255,62,0.3)]" 
+              : "w-10 p-0 bg-[#D4FF3E] border-transparent text-transparent placeholder:text-transparent cursor-pointer hover:scale-105 shadow-md"
           )}
         />
         {isLoading && isExpanded && (
           <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-            <Loader2 className="h-4 w-4 animate-spin text-[#D4FF3E]" />
+            <Loader2 className="h-4 w-4 animate-spin text-black" />
           </div>
         )}
       </form>

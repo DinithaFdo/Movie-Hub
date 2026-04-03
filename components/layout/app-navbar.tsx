@@ -27,14 +27,16 @@ export function AppNavbar() {
       className="absolute top-0 left-0 right-0 z-50 pt-6 px-4 md:px-12 flex items-center justify-between pointer-events-auto"
     >
       {/* Left: Bold Text Logo with layoutId linking to Preloader */}
-      <Link href="/" className="flex items-center gap-2">
-        <motion.span 
-          layoutId="logo"
-          className="text-xl md:text-2xl font-black tracking-tight text-[#D4FF3E]"
-        >
-          MOVIEHUB
-        </motion.span>
-      </Link>
+      <div className="md:flex-1 flex justify-start basis-0">
+        <Link href="/" className="flex items-center gap-2">
+          <motion.span 
+            layoutId="logo"
+            className="text-xl md:text-2xl font-black tracking-tight text-[#D4FF3E]"
+          >
+            MOVIEHUB
+          </motion.span>
+        </Link>
+      </div>
 
       {/* Center: Pill-shaped navigation spanning from pill to long nav */}
       <motion.nav 
@@ -71,7 +73,7 @@ export function AppNavbar() {
         initial={{ opacity: 0, x: 20 }}
         animate={hasLoaded ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
         transition={{ duration: 0.5, delay: 0.6 }}
-        className="flex items-center gap-3 relative"
+        className="flex items-center justify-end gap-3 relative md:flex-1 basis-0"
       >
         <motion.div layout className="flex items-center justify-end mr-2 md:mr-0">
            <LiveSearch 
