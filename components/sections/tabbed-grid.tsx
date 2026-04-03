@@ -56,14 +56,14 @@ export function TabbedGrid({ movies, tvShows }: TabbedGridProps) {
         </motion.p>
       </div>
 
-      <motion.div 
-        initial={{ width: 60, opacity: 0 }}
-        whileInView={{ width: "auto", opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        className="flex justify-center mb-8 md:mb-16 mx-auto overflow-hidden fit-content px-4 relative z-10"
-      >
-        <div className="bg-[#1A1A1D] p-1.5 rounded-full flex gap-1 border border-white/5 shadow-xl max-w-full overflow-x-auto hide-scrollbar whitespace-nowrap">
+      <div className="flex justify-center mb-8 md:mb-16 mx-auto w-full relative z-10">
+        <motion.div 
+          initial={{ width: 60, opacity: 0 }}
+          whileInView={{ width: "auto", opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          className="bg-[#1A1A1D] p-1.5 rounded-full flex justify-center items-center gap-1 border border-white/5 shadow-xl overflow-hidden whitespace-nowrap"
+        >
           {tabs.map((tab) => {
             const isActive = activeTab === tab;
             return (
@@ -86,8 +86,8 @@ export function TabbedGrid({ movies, tvShows }: TabbedGridProps) {
               </button>
             );
           })}
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
 
       {/* CSS Auto-Scrolling Marquees (Pause on Hover Native) */}
       <div className="flex flex-col gap-6 relative mask-edges">

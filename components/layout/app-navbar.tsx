@@ -40,10 +40,10 @@ export function AppNavbar() {
 
       {/* Center: Pill-shaped navigation spanning from pill to long nav */}
       <motion.nav 
-        initial={{ width: 40, opacity: 0 }}
-        animate={hasLoaded ? { width: "auto", opacity: 1 } : { width: 40, opacity: 0 }}
+        initial={{ width: 60, opacity: 0 }}
+        animate={hasLoaded ? { width: "auto", opacity: 1 } : { width: 60, opacity: 0 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-        className="hidden md:flex items-center bg-[#1A1A1D]/80 backdrop-blur-xl border border-white/5 rounded-full px-2 py-1.5 shadow-2xl overflow-hidden whitespace-nowrap"
+        className="hidden md:flex items-center justify-center bg-[#1A1A1D]/80 backdrop-blur-xl border border-white/5 rounded-full p-1.5 shadow-2xl overflow-hidden whitespace-nowrap"
       >
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
