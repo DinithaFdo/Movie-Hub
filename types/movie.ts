@@ -1,5 +1,14 @@
+// ============ Core Types ============
 export type MediaType = "movie" | "tv";
 
+export type SortOption =
+  | "popularity.desc"
+  | "revenue.desc"
+  | "primary_release_date.desc"
+  | "vote_average.desc"
+  | "vote_count.desc";
+
+// ============ Movie/TV Types ============
 export type MovieSummary = {
   id: number;
   title: string;
@@ -67,4 +76,51 @@ export type MediaDetail = MovieSummary & {
   seasons?: Season[];
   numberOfSeasons?: number;
   numberOfEpisodes?: number;
+};
+
+// ============ Filter & Search Types ============
+export type FilterOptions = {
+  genres?: number[];
+  sort?: SortOption;
+  year?: number;
+  minRating?: number;
+  maxRating?: number;
+  page?: number;
+};
+
+export type SearchParams = {
+  query: string;
+  type?: MediaType | "all";
+  page?: number;
+};
+
+// ============ API Response Types ============
+export type APIResponse<T> = {
+  results: T[];
+  page: number;
+  total_pages: number;
+  total_results: number;
+};
+
+// ============ Error Types ============
+export type APIError = {
+  code: string;
+  message: string;
+  statusCode: number;
+};
+
+// ============ User Interaction Types ============
+export type UserAction =
+  | "favorite"
+  | "watch"
+  | "share"
+  | "search"
+  | "view"
+  | "collection";
+
+export type UserInteraction = {
+  action: UserAction;
+  mediaId: number;
+  mediaType: MediaType;
+  timestamp: number;
 };

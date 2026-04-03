@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import type { MovieSummary } from "@/types/movie";
+import { useFavoritesStore } from "@/stores/favorites";
 
 interface FavoritesContextType {
   favorites: MovieSummary[];
@@ -10,42 +11,44 @@ interface FavoritesContextType {
   isFavorite: (id: number) => boolean;
 }
 
-const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
+const FavoritesContext = createContext<FavoritesContextType | undefined>(
+  undefined,
+);
+
+const LEGACY_FAVORITES_KEY = "moviehub-favorites";
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
-  const [favorites, setFavorites] = useState<MovieSummary[]>(() => {
-    if (typeof window === "undefined") return [];
-    const saved = localStorage.getItem("moviehub-favorites");
-    if (!saved) return [];
-    try {
-      return JSON.parse(saved) as MovieSummary[];
-    } catch (e) {
-      console.error("Failed to parse favorites", e);
-      return [];
-    }
-  });
+  const favorites = useFavoritesStore((state) => state.favorites);
+  const addToFavorites = useFavoritesStore((state) => state.addToFavorites);
+  const removeFromFavorites = useFavoritesStore(
+    (state) => state.removeFromFavorites,
+  );
+  const isFavorite = useFavoritesStore((state) => state.isFavorite);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    localStorage.setItem("moviehub-favorites", JSON.stringify(favorites));
-  }, [favorites]);
 
-  const addToFavorites = (movie: MovieSummary) => {
-    if (!favorites.some((f) => f.id === movie.id)) {
-      setFavorites((prev) => [...prev, movie]);
+    const saved = localStorage.getItem(LEGACY_FAVORITES_KEY);
+    if (!saved) return;
+
+    try {
+      const parsed = JSON.parse(saved) as MovieSummary[];
+      if (Array.isArray(parsed)) {
+        parsed.forEach((item) => addToFavorites(item));
+      }
+      localStorage.removeItem(LEGACY_FAVORITES_KEY);
+    } catch (e) {
+      console.error("Failed to migrate legacy favorites", e);
     }
-  };
+  }, [addToFavorites]);
 
-  const removeFromFavorites = (id: number) => {
-    setFavorites((prev) => prev.filter((movie) => movie.id !== id));
-  };
-
-  const isFavorite = (id: number) => {
-    return favorites.some((movie) => movie.id === id);
-  };
+  const value = useMemo(
+    () => ({ favorites, addToFavorites, removeFromFavorites, isFavorite }),
+    [favorites, addToFavorites, removeFromFavorites, isFavorite],
+  );
 
   return (
-    <FavoritesContext.Provider value={{ favorites, addToFavorites, removeFromFavorites, isFavorite }}>
+    <FavoritesContext.Provider value={value}>
       {children}
     </FavoritesContext.Provider>
   );

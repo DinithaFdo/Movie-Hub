@@ -1,66 +1,94 @@
 import { Suspense } from "react";
+import {
+  getTrendingMovies,
+  getTrendingTV,
+  getPopularMovies,
+  getTopRatedMovies,
+} from "@/services/tmdb";
+import { HeroSection } from "@/components/sections/hero-section";
+import { EditorialSpotlight } from "@/components/sections/editorial-spotlight";
+import { MediaGridSection } from "@/components/sections/media-grid-section";
+import { HeroSkeleton, RowSkeleton } from "@/components/skeletons/skeleton";
 
-import { HeroFeatured } from "@/components/sections/hero-featured";
-import { MovieRow } from "@/components/sections/movie-row";
+export const revalidate = 3600; // ISR - revalidate every hour
 
-function HeroSkeleton() {
+export default async function Home() {
+  const [trendingMovies, trendingTV, popularMovies, topRatedMovies] =
+    await Promise.allSettled([
+      getTrendingMovies(),
+      getTrendingTV(),
+      getPopularMovies(),
+      getTopRatedMovies(),
+    ]);
+
+  const trendingMoviesData =
+    trendingMovies.status === "fulfilled" ? trendingMovies.value : [];
+  const trendingTVData =
+    trendingTV.status === "fulfilled" ? trendingTV.value : [];
+  const popularMoviesData =
+    popularMovies.status === "fulfilled" ? popularMovies.value : [];
+  const topRatedMoviesData =
+    topRatedMovies.status === "fulfilled" ? topRatedMovies.value : [];
+  const spotlightMedia = [
+    ...topRatedMoviesData.slice(0, 2),
+    ...popularMoviesData.slice(0, 2),
+    ...trendingMoviesData.slice(0, 1),
+  ];
+
   return (
-    <div className="relative h-[85vh] w-full animate-pulse overflow-hidden bg-neutral-900">
-      <div className="absolute inset-x-0 bottom-0 h-96 bg-linear-to-t from-black via-black/80 to-transparent" />
-      <div className="absolute bottom-0 left-0 w-full max-w-7xl p-8 md:p-16 space-y-4">
-        <div className="h-16 w-3/4 rounded-2xl bg-white/5" />
-        <div className="h-6 w-1/2 rounded-full bg-white/5" />
-        <div className="mt-8 flex gap-4">
-          <div className="h-12 w-32 rounded-full bg-white/10" />
-          <div className="h-12 w-32 rounded-full bg-white/10" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function RowSkeleton() {
-  return (
-    <div className="w-full space-y-4 px-4 py-8 md:px-12">
-      <div className="h-8 w-48 animate-pulse rounded bg-white/5" />
-      <div className="flex gap-4 overflow-hidden">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="aspect-2/3 w-45 shrink-0 animate-pulse rounded-xl bg-white/5"
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export const revalidate = 3600;
-
-export default function Home() {
-  return (
-    <main className="min-h-screen bg-[#050505] pb-24 text-white selection:bg-[#00f3ff] selection:text-black">
-      {/* Hero Section - Full Width & Immersive */}
+    <main className="relative min-h-screen overflow-x-clip pb-24">
+      <div className="pointer-events-none absolute inset-0 -z-10 page-atmosphere" />
+      <div className="pointer-events-none absolute inset-0 -z-10 page-grid" />
+      <div className="pointer-events-none absolute -left-32 top-64 -z-10 h-64 w-64 rounded-full bg-(--primary)/20 blur-3xl" />
+      {/* Hero Section */}
       <Suspense fallback={<HeroSkeleton />}>
-        <HeroFeatured />
+        <HeroSection />
       </Suspense>
 
-      {/* Content Sections - Overlapping Hero slightly for that seamless look */}
-      <div className="relative z-10 -mt-20 space-y-4 pt-20 md:-mt-32 md:space-y-12">
+      {/* Content Sections */}
+      <div className="relative space-y-14 pt-12 md:space-y-18 md:pt-18 lg:space-y-20">
         <Suspense fallback={<RowSkeleton />}>
-          <MovieRow id="trending" />
+          <EditorialSpotlight media={spotlightMedia} />
         </Suspense>
 
+        {/* Trending Movies */}
         <Suspense fallback={<RowSkeleton />}>
-          <MovieRow id="now-playing" />
+          <MediaGridSection
+            title="Trending Movies"
+            subtitle="Blockbuster momentum, global chatter, and big-screen energy in one ribbon."
+            media={trendingMoviesData}
+            variant="row"
+          />
         </Suspense>
 
+        {/* Trending TV Shows */}
         <Suspense fallback={<RowSkeleton />}>
-          <MovieRow id="popular" />
+          <MediaGridSection
+            title="Trending TV Series"
+            subtitle="The binge map: crowd-favorite episodes and breakout series everyone talks about."
+            media={trendingTVData}
+            variant="row"
+          />
         </Suspense>
 
+        {/* Popular Movies */}
         <Suspense fallback={<RowSkeleton />}>
-          <MovieRow id="top-rated" />
+          <MediaGridSection
+            title="Popular Right Now"
+            subtitle="Massive fan picks this week, curated for instant watch decisions."
+            media={popularMoviesData}
+            variant="row"
+          />
+        </Suspense>
+
+        {/* Top Rated Movies */}
+        <Suspense fallback={<RowSkeleton />}>
+          <MediaGridSection
+            title="Top Rated Masterpieces"
+            subtitle="Prestige cinema, peak storytelling, and all-time critical darlings."
+            media={topRatedMoviesData}
+            variant="row"
+          />
         </Suspense>
       </div>
     </main>

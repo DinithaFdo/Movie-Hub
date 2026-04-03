@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, Clock, Star, Info } from "lucide-react";
+import { Calendar, Clock, Star, Info } from "lucide-react";
 
 import { SeasonSelector } from "@/components/watch/season-selector";
 import { WatchActions } from "@/components/watch/watch-actions";
@@ -96,13 +96,6 @@ export default async function WatchPage({
       </div>
 
       <main className="relative z-10 mx-auto max-w-400 overflow-x-clip px-3 pt-24 pb-10 sm:px-4 md:p-8 md:pt-28 lg:px-10 xl:px-12">
-        <Link
-          href="/"
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#ffa31a]/35 bg-[#161616]/90 px-4 py-2 text-sm font-medium text-white backdrop-blur-md transition-colors hover:bg-[#ffa31a]/15 hover:text-[#ffd38a]"
-        >
-          <ArrowLeft size={16} /> Back to Home
-        </Link>
-
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start xl:gap-12">
           <div className="min-w-0 space-y-6 sm:space-y-8">
             {/* Player Container */}

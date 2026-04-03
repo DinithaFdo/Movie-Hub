@@ -1,9 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Sora } from "next/font/google";
 
-import { AppNavbar } from "@/components/layout/app-navbar";
-import { ThemeProvider } from "@/components/theme/theme-provider";
+import { EnhancedAppNavbar } from "@/components/layout/enhanced-navbar";
+import { EnhancedThemeProvider } from "@/components/theme/enhanced-theme-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
+import { ToastProvider } from "@/components/toast-provider";
+import { ErrorBoundary } from "@/components/error-boundary";
 import { FavoritesProvider } from "@/context/favorites-context";
+import { ScrollRevealScript } from "@/components/scroll-reveal-script";
 
 import "./globals.css";
 
@@ -18,9 +22,9 @@ const headingFont = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "Movie Hub · Next Generation Streaming",
+  title: "MovieHub · Enterprise Streaming Platform",
   description:
-    "Modern movie streaming platform built with Next.js, TMDB, and VidSrc",
+    "Modern movie & TV streaming platform with advanced search, recommendations, and collection management. Built with Next.js, React, and TMDB.",
   icons: {
     icon: [
       { url: "/icon.svg", type: "image/svg+xml" },
@@ -29,6 +33,19 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/icon.svg",
   },
+  openGraph: {
+    title: "MovieHub · Enterprise Streaming Platform",
+    description: "The next-generation movie and TV streaming platform",
+    type: "website",
+    locale: "en_US",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 };
 
 export default function RootLayout({
@@ -38,18 +55,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="#ffa31a" />
+      </head>
       <body
         className={`${sansFont.variable} ${headingFont.variable} antialiased`}
         suppressHydrationWarning
       >
-        <ThemeProvider>
-          <FavoritesProvider>
-            <div className="page-bg min-h-screen overflow-x-clip">
-              <AppNavbar />
-              {children}
-            </div>
-          </FavoritesProvider>
-        </ThemeProvider>
+        <EnhancedThemeProvider>
+          <QueryProvider>
+            <FavoritesProvider>
+              <ErrorBoundary>
+                <div className="min-h-screen overflow-x-clip bg-(--bg-base) text-(--text-primary)">
+                  <EnhancedAppNavbar />
+                  <main className="relative">{children}</main>
+                  <ToastProvider />
+                  <ScrollRevealScript />
+                </div>
+              </ErrorBoundary>
+            </FavoritesProvider>
+          </QueryProvider>
+        </EnhancedThemeProvider>
       </body>
     </html>
   );

@@ -6,9 +6,12 @@ import Image from "next/image";
 import { Search, Loader2 } from "lucide-react";
 
 import { getTMDBImageUrl } from "@/lib/tmdb";
+import { cn } from "@/utils/helpers";
 import type { MovieSummary } from "@/types/movie";
+import { useSearchHistoryStore } from "@/stores/search-history";
 
-export function LiveSearch() {
+export function LiveSearch({ className }: { className?: string }) {
+  const { addSearch } = useSearchHistoryStore();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<MovieSummary[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -70,8 +73,13 @@ export function LiveSearch() {
             signal: controller.signal,
           },
         );
-        const payload = (await response.json()) as MovieSummary[];
-        setResults(payload.slice(0, 5));
+        const payload = (await response.json()) as {
+          results: MovieSummary[];
+          page: number;
+          totalPages: number;
+          totalResults: number;
+        };
+        setResults((payload.results || []).slice(0, 6));
       } catch (error: unknown) {
         if ((error as { name?: string }).name !== "AbortError") {
           setResults([]);
@@ -83,16 +91,22 @@ export function LiveSearch() {
   }
 
   const shouldShowPanel = useMemo(
-    () =>
-      showResults &&
-      query.trim().length >= 2 &&
-      (isLoading || results.length > 0),
-    [showResults, query, isLoading, results],
+    () => showResults && query.trim().length >= 2,
+    [showResults, query],
   );
 
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+    const nextQuery = query.trim();
+    if (nextQuery.length < 2) return;
+
+    addSearch(nextQuery);
+    setShowResults(true);
+  }
+
   return (
-    <div ref={containerRef} className="relative w-full max-w-xl mx-auto">
-      <div className="relative group">
+    <div ref={containerRef} className={cn("relative w-full", className)}>
+      <form className="relative group" onSubmit={handleSubmit}>
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
           <Search className="h-4 w-4 text-gray-400 group-focus-within:text-[#00f3ff] transition-colors" />
         </div>
@@ -108,7 +122,7 @@ export function LiveSearch() {
             <Loader2 className="h-4 w-4 animate-spin text-[#00f3ff]" />
           </div>
         )}
-      </div>
+      </form>
 
       {shouldShowPanel && (
         <div className="absolute z-50 mt-2 w-full overflow-hidden rounded-2xl border border-white/10 bg-neutral-900/95 backdrop-blur-xl shadow-2xl shadow-black/50 ring-1 ring-white/5">
@@ -119,6 +133,7 @@ export function LiveSearch() {
                 href={`/watch/${movie.mediaType}/${movie.id}`}
                 className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-white/10 group border-b border-white/5 last:border-0"
                 onClick={() => {
+                  addSearch(query.trim());
                   setQuery("");
                   setResults([]);
                   setShowResults(false);

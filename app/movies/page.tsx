@@ -1,24 +1,67 @@
-import { MediaGrid } from "@/components/sections/media-grid";
-import { getDiscovery } from "@/lib/tmdb";
+"use client";
 
-export const revalidate = 3600;
+import { useState, useEffect } from "react";
+import { MediaCard } from "@/components/cards/media-card";
+import { Pagination } from "@/components/ui/pagination";
+import { MediaGridSkeleton } from "@/components/skeletons/skeleton";
+import { PageHeader, PageShell } from "@/components/layout/page-shell";
+import { usePagination } from "@/hooks";
+import type { MovieSummary } from "@/types/movie";
+import { Film } from "lucide-react";
 
-export default async function MoviesPage() {
-  const initialMedia = await getDiscovery("movie", "popular", 1);
+export default function MoviesPage() {
+  const { page, goToPage } = usePagination(1);
+  const [movies, setMovies] = useState<MovieSummary[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(100);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/movies?page=${page}`);
+        const data = (await response.json()) as MovieSummary[];
+        setMovies(data);
+        setTotalPages(100);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, [page]);
 
   return (
-    <div className="relative min-h-screen">
-      <div className="fixed inset-0 z-[-1]">
-        <div className="absolute inset-0 bg-linear-to-t from-[#050505] via-[#050505]/95 to-[#050505]/80" />
-      </div>
-
-      <main className="pt-20">
-        <MediaGrid
-          initialMedia={initialMedia}
-          type="movie"
-          title="Recommended Movies"
+    <PageShell>
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-12">
+        <PageHeader
+          title="Movies"
+          subtitle="Explore blockbuster hits, indie gems, and timeless classics in one cinematic catalog."
+          icon={<Film className="h-8 w-8" />}
         />
-      </main>
-    </div>
+
+        {/* Grid */}
+        {isLoading ? (
+          <MediaGridSkeleton count={12} />
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+              {movies.map((movie) => (
+                <MediaCard key={movie.id} media={movie} />
+              ))}
+            </div>
+
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={goToPage}
+              isLoading={isLoading}
+            />
+          </>
+        )}
+      </div>
+    </PageShell>
   );
 }
