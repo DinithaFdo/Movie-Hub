@@ -1,45 +1,54 @@
-import Link from "next/link";
-import { Clapperboard, ArrowLeft, Search } from "lucide-react";
+"use client";
 
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Clapperboard, Home, Search } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function NotFound() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,163,26,0.18),transparent_45%),radial-gradient(circle_at_80%_90%,rgba(255,163,26,0.12),transparent_40%)]" />
+    <main className="relative min-h-screen overflow-hidden bg-[#0D0D0F] text-white flex items-center justify-center">
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,255,62,0.05),transparent_60%)] pointer-events-none" />
 
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-5xl flex-col items-center justify-center px-6 py-20 text-center">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#ffa31a]/40 bg-[#151515]/85 px-4 py-2 text-[#ffd38a] backdrop-blur">
-          <Clapperboard size={16} />
-          <span className="text-xs font-semibold uppercase tracking-widest">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-4xl flex flex-col items-center justify-center px-6 text-center"
+      >
+        <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-4 py-2 text-white backdrop-blur shadow-xl">
+          <Clapperboard size={18} className="text-[#D4FF3E]" />
+          <span className="text-sm font-bold tracking-widest uppercase">
             MovieHub
           </span>
         </div>
 
-        <h1 className="text-7xl font-black tracking-tight text-[#ffa31a] sm:text-8xl md:text-9xl">
+        <h1 className="text-8xl md:text-[12rem] font-black tracking-tight text-[#D4FF3E] leading-none drop-shadow-[0_0_80px_rgba(212,255,62,0.3)]">
           404
         </h1>
-        <p className="mt-3 text-2xl font-bold sm:text-3xl">Scene Not Found</p>
-        <p className="mt-4 max-w-xl text-sm text-[#a3a3a3] sm:text-base">
-          The page you are looking for is missing, removed, or moved to another
-          location.
+        <p className="mt-6 text-3xl font-black md:text-5xl tracking-tight text-white drop-shadow-xl">
+          Scene Not Found
+        </p>
+        <p className="mt-4 max-w-lg text-lg text-[#8A8A8E] font-medium leading-relaxed">
+          Looks like this scene ended up on the cutting room floor. Let's get you back to the premier.
         </p>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/">
-            <Button className="gap-2">
-              <ArrowLeft size={16} />
-              Back to Home
-            </Button>
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+          <Link 
+            href="/"
+            className="flex items-center justify-center gap-2 bg-[#D4FF3E] text-black font-black uppercase tracking-wider px-8 py-4 rounded-full hover:bg-white hover:scale-105 transition-all w-full sm:w-auto shadow-[0_0_40px_rgba(212,255,62,0.2)]"
+          >
+            <Home size={20} />
+            Back to Home
           </Link>
-          <Link href="/movies">
-            <Button variant="outline" className="gap-2">
-              <Search size={16} />
-              Browse Movies
-            </Button>
+          <Link 
+            href="/movies"
+            className="flex items-center justify-center gap-2 border-2 border-white/10 bg-black/50 text-white font-bold uppercase tracking-wider px-8 py-4 rounded-full hover:border-[#D4FF3E] hover:text-[#D4FF3E] hover:bg-black transition-all w-full sm:w-auto backdrop-blur-md"
+          >
+            <Search size={20} />
+            Browse Movies
           </Link>
         </div>
-      </div>
+      </motion.div>
     </main>
   );
 }

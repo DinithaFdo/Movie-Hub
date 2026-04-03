@@ -1,14 +1,15 @@
-import { Suspense } from "react";
+
 import {
   getTrendingMovies,
   getTrendingTV,
   getPopularMovies,
   getTopRatedMovies,
 } from "@/services/tmdb";
-import { HeroSection } from "@/components/sections/hero-section";
-import { EditorialSpotlight } from "@/components/sections/editorial-spotlight";
-import { MediaGridSection } from "@/components/sections/media-grid-section";
-import { HeroSkeleton, RowSkeleton } from "@/components/skeletons/skeleton";
+import { CurvedCarousel } from "@/components/sections/CurvedCarousel";
+import { FeaturesGrid } from "@/components/sections/features-grid";
+import { StackedCarousel } from "@/components/sections/stacked-carousel";
+import { TabbedGrid } from "@/components/sections/tabbed-grid";
+import { NewsletterFooter } from "@/components/layout/newsletter-footer";
 
 export const revalidate = 3600; // ISR - revalidate every hour
 
@@ -21,76 +22,23 @@ export default async function Home() {
       getTopRatedMovies(),
     ]);
 
-  const trendingMoviesData =
-    trendingMovies.status === "fulfilled" ? trendingMovies.value : [];
-  const trendingTVData =
-    trendingTV.status === "fulfilled" ? trendingTV.value : [];
-  const popularMoviesData =
-    popularMovies.status === "fulfilled" ? popularMovies.value : [];
-  const topRatedMoviesData =
-    topRatedMovies.status === "fulfilled" ? topRatedMovies.value : [];
-  const spotlightMedia = [
-    ...topRatedMoviesData.slice(0, 2),
-    ...popularMoviesData.slice(0, 2),
-    ...trendingMoviesData.slice(0, 1),
-  ];
+  const trendingMoviesData = trendingMovies.status === "fulfilled" ? trendingMovies.value : [];
+  const trendingTVData = trendingTV.status === "fulfilled" ? trendingTV.value : [];
+  const popularMoviesData = popularMovies.status === "fulfilled" ? popularMovies.value : [];
+  const topRatedMoviesData = topRatedMovies.status === "fulfilled" ? topRatedMovies.value : [];
 
   return (
-    <main className="relative min-h-screen overflow-x-clip pb-24">
-      <div className="pointer-events-none absolute inset-0 -z-10 page-atmosphere" />
-      <div className="pointer-events-none absolute inset-0 -z-10 page-grid" />
-      <div className="pointer-events-none absolute -left-32 top-64 -z-10 h-64 w-64 rounded-full bg-(--primary)/20 blur-3xl" />
-      {/* Hero Section */}
-      <Suspense fallback={<HeroSkeleton />}>
-        <HeroSection />
-      </Suspense>
+    <main className="relative min-h-screen overflow-x-clip bg-[var(--bg-base)]">
+      {/* Subtle modern glowing orbs */}
+      <div className="pointer-events-none absolute -left-64 top-0 -z-10 h-[500px] w-[500px] rounded-full bg-[#D4FF3E]/5 blur-[120px]" />
+      <div className="pointer-events-none absolute right-0 top-[40%] -z-10 h-[600px] w-[600px] rounded-full bg-[#D4FF3E]/5 blur-[150px]" />
 
-      {/* Content Sections */}
-      <div className="relative space-y-14 pt-12 md:space-y-18 md:pt-18 lg:space-y-20">
-        <Suspense fallback={<RowSkeleton />}>
-          <EditorialSpotlight media={spotlightMedia} />
-        </Suspense>
-
-        {/* Trending Movies */}
-        <Suspense fallback={<RowSkeleton />}>
-          <MediaGridSection
-            title="Trending Movies"
-            subtitle="Blockbuster momentum, global chatter, and big-screen energy in one ribbon."
-            media={trendingMoviesData}
-            variant="row"
-          />
-        </Suspense>
-
-        {/* Trending TV Shows */}
-        <Suspense fallback={<RowSkeleton />}>
-          <MediaGridSection
-            title="Trending TV Series"
-            subtitle="The binge map: crowd-favorite episodes and breakout series everyone talks about."
-            media={trendingTVData}
-            variant="row"
-          />
-        </Suspense>
-
-        {/* Popular Movies */}
-        <Suspense fallback={<RowSkeleton />}>
-          <MediaGridSection
-            title="Popular Right Now"
-            subtitle="Massive fan picks this week, curated for instant watch decisions."
-            media={popularMoviesData}
-            variant="row"
-          />
-        </Suspense>
-
-        {/* Top Rated Movies */}
-        <Suspense fallback={<RowSkeleton />}>
-          <MediaGridSection
-            title="Top Rated Masterpieces"
-            subtitle="Prestige cinema, peak storytelling, and all-time critical darlings."
-            media={topRatedMoviesData}
-            variant="row"
-          />
-        </Suspense>
-      </div>
+      <CurvedCarousel movies={trendingMoviesData} />
+      <FeaturesGrid />
+      <StackedCarousel movies={topRatedMoviesData} />
+      <TabbedGrid movies={popularMoviesData} tvShows={trendingTVData} />
+      
+      <NewsletterFooter />
     </main>
   );
 }

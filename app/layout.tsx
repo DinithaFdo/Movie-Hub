@@ -1,44 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, Sora } from "next/font/google";
+import { Poppins } from "next/font/google";
 
-import { EnhancedAppNavbar } from "@/components/layout/enhanced-navbar";
+import { AppNavbar } from "@/components/layout/app-navbar";
 import { EnhancedThemeProvider } from "@/components/theme/enhanced-theme-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ToastProvider } from "@/components/toast-provider";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { FavoritesProvider } from "@/context/favorites-context";
 import { ScrollRevealScript } from "@/components/scroll-reveal-script";
+import { PreloaderProvider } from "@/components/context/preloader-context";
+import { Preloader } from "@/components/layout/preloader";
 
 import "./globals.css";
 
-const sansFont = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
-});
-
-const headingFont = Sora({
-  variable: "--font-sora",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "MovieHub · Enterprise Streaming Platform",
-  description:
-    "Modern movie & TV streaming platform with advanced search, recommendations, and collection management. Built with Next.js, React, and TMDB.",
-  icons: {
-    icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: "/icon.svg",
-  },
-  openGraph: {
-    title: "MovieHub · Enterprise Streaming Platform",
-    description: "The next-generation movie and TV streaming platform",
-    type: "website",
-    locale: "en_US",
-  },
+  title: "Cinestream",
+  description: "Discover the Series Streaming Experience",
 };
 
 export const viewport: Viewport = {
@@ -55,24 +38,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <meta name="theme-color" content="#ffa31a" />
-      </head>
-      <body
-        className={`${sansFont.variable} ${headingFont.variable} antialiased`}
-        suppressHydrationWarning
-      >
+      <body className={`${poppins.variable} antialiased`} suppressHydrationWarning>
         <EnhancedThemeProvider>
           <QueryProvider>
             <FavoritesProvider>
-              <ErrorBoundary>
-                <div className="min-h-screen overflow-x-clip bg-(--bg-base) text-(--text-primary)">
-                  <EnhancedAppNavbar />
-                  <main className="relative">{children}</main>
-                  <ToastProvider />
-                  <ScrollRevealScript />
-                </div>
-              </ErrorBoundary>
+              <PreloaderProvider>
+                <ErrorBoundary>
+                  <div className="min-h-screen overflow-x-clip bg-[var(--bg-base)] text-[var(--text-primary)] font-body">
+                    <Preloader />
+                    <AppNavbar />
+                    <main className="relative">{children}</main>
+                    <ToastProvider />
+                    <ScrollRevealScript />
+                  </div>
+                </ErrorBoundary>
+              </PreloaderProvider>
             </FavoritesProvider>
           </QueryProvider>
         </EnhancedThemeProvider>

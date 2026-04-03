@@ -29,7 +29,7 @@ export function MediaGridSection({
       className="reveal-on-scroll relative w-full px-4 md:px-6 lg:px-8"
     >
       {/* Header */}
-      <div className="mb-6 flex items-end justify-between gap-4 md:mb-8">
+      <div className="mb-4 flex items-end justify-between gap-4 md:mb-8">
         <div>
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-(--text-muted)">
             Curated Collection
@@ -76,7 +76,7 @@ export function MediaGridSection({
           <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-12 bg-linear-to-l from-(--bg-base) to-transparent md:block" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {media.map((item) => (
             <MediaCard key={item.id} media={item} showActionButtons={true} />
           ))}

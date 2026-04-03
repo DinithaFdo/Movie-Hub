@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Calendar, Clock, Star, Info } from "lucide-react";
+import { Clock, Star, Info, Play } from "lucide-react";
 
 import { SeasonSelector } from "@/components/watch/season-selector";
 import { WatchActions } from "@/components/watch/watch-actions";
@@ -80,113 +80,124 @@ export default async function WatchPage({
   const streamUrl = buildVidSrcUrl(type, id, { season, episode });
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-clip bg-[#050505] text-white selection:bg-[#ffa31a] selection:text-black">
-      {/* Background with Overlay */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-linear-to-t from-[#050505] via-[#050505]/90 to-[#050505]/60 z-10" />
+    <div className="relative min-h-screen w-full overflow-x-clip bg-[#0D0D0F] text-white">
+      {/* Background with Deep Overlay */}
+      <div className="absolute top-0 left-0 right-0 h-[80vh] z-0 pointer-events-none">
         {details.backdropPath && (
           <Image
             src={getTMDBImageUrl(details.backdropPath, "original")}
             alt="Background"
             fill
-            className="object-cover opacity-50 blur-sm"
+            className="object-cover opacity-30 mask-image-gradient"
             priority
           />
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0F] via-[#0D0D0F]/80 to-transparent" />
       </div>
 
-      <main className="relative z-10 mx-auto max-w-400 overflow-x-clip px-3 pt-24 pb-10 sm:px-4 md:p-8 md:pt-28 lg:px-10 xl:px-12">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start xl:gap-12">
-          <div className="min-w-0 space-y-6 sm:space-y-8">
-            {/* Player Container */}
-            <div className="group relative mx-auto aspect-video w-full max-w-4xl overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_0_24px_rgba(255,163,26,0.14)] sm:rounded-2xl">
-              <iframe
-                src={streamUrl}
-                title={`MovieHub Player - ${details.title}`}
-                className="absolute inset-0 h-full w-full"
-                allowFullScreen
-                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                referrerPolicy="no-referrer"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
-              />
-            </div>
+      <main className="relative z-10 mx-auto w-full max-w-[1800px] overflow-x-clip px-4 pt-32 pb-20 md:px-8 lg:px-12">
+        
+        {/* Massive Player Container with Dribbble Styling */}
+        <div className="group relative mx-auto aspect-video w-full max-w-[1400px] overflow-hidden rounded-[2.5rem] md:rounded-[4rem] border border-white/5 bg-black shadow-[0_40px_100px_-20px_rgba(212,255,62,0.15)] ring-[2px] ring-white/5">
+          <iframe
+            src={streamUrl}
+            title={`MovieHub Player - ${details.title}`}
+            className="absolute inset-0 h-full w-full bg-black"
+            allowFullScreen
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            referrerPolicy="no-referrer"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+          />
+        </div>
 
-            {/* Info Section */}
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <h1 className="text-2xl font-bold tracking-tight text-transparent bg-clip-text bg-linear-to-r from-white to-gray-400 sm:text-3xl md:text-5xl lg:text-6xl">
-                  {details.title}
-                </h1>
-
-                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
-                  <div className="flex items-center gap-1 text-[#ffa31a]">
-                    <Star size={16} fill="currentColor" />
-                    <span className="font-bold">
-                      {details.voteAverage?.toFixed(1)}
-                    </span>
-                  </div>
-                  {details.releaseDate && (
-                    <div className="flex items-center gap-1">
-                      <Calendar size={16} />
-                      <span>{new Date(details.releaseDate).getFullYear()}</span>
-                    </div>
-                  )}
-                  {details.runtime ? (
-                    <div className="flex items-center gap-1">
-                      <Clock size={16} />
-                      <span>
-                        {Math.floor(details.runtime / 60)}h{" "}
-                        {details.runtime % 60}m
-                      </span>
-                    </div>
-                  ) : null}
-                  {details.numberOfSeasons && (
-                    <div className="flex items-center gap-1">
-                      <Info size={16} />
-                      <span>{details.numberOfSeasons} Seasons</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-wrap items-center gap-4">
-                  <WatchActions detail={details} />
-                  {details.genres && (
-                    <div className="flex flex-wrap gap-2">
-                      {details.genres.map((g) => (
-                        <span
-                          key={g.id}
-                          className="rounded-full border border-[#ffa31a]/30 bg-[#1a1a1a] px-3 py-1 text-xs text-[#ffd38a]"
-                        >
-                          {g.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <p className="max-w-4xl text-base leading-relaxed text-gray-300 sm:text-lg">
-                  {details.overview}
-                </p>
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_400px] mt-16 max-w-[1400px] mx-auto">
+          
+          <div className="space-y-10">
+            {/* Core Info Section */}
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="bg-[#D4FF3E] text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  {type === "tv" ? "TV Series" : "Movie"}
+                </span>
+                <span className="bg-[#1A1A1D] border border-white/10 text-white text-xs font-bold px-3 py-1 rounded-full">
+                  HD
+                </span>
+                {details.releaseDate && (
+                  <span className="text-[#8A8A8E] text-sm font-bold">
+                    {new Date(details.releaseDate).getFullYear()}
+                  </span>
+                )}
               </div>
 
-              {type === "tv" && details.seasons && (
-                <div className="pb-8">
-                  <SeasonSelector mediaId={id} seasons={details.seasons} />
+              <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white mb-6 drop-shadow-lg">
+                {details.title}
+              </h1>
+
+              <div className="flex flex-wrap items-center gap-6 mb-8 text-[#8A8A8E] font-medium border-b border-white/5 pb-8">
+                <div className="flex items-center gap-2">
+                  <Star size={20} className="text-[#D4FF3E] fill-current" />
+                  <span className="text-white font-bold text-lg">
+                    {details.voteAverage?.toFixed(1)}
+                  </span>
                 </div>
-              )}
+                
+                {details.runtime ? (
+                  <div className="flex items-center gap-2 text-white">
+                    <Clock size={16} />
+                    <span>
+                      {Math.floor(details.runtime / 60)}h{" "}
+                      {details.runtime % 60}m
+                    </span>
+                  </div>
+                ) : null}
+                
+                {details.numberOfSeasons && (
+                  <div className="flex items-center gap-2 text-white">
+                    <Info size={16} />
+                    <span>{details.numberOfSeasons} Seasons</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-4 mb-8">
+                <WatchActions detail={details} />
+                {details.genres && (
+                  <div className="flex flex-wrap gap-2 ml-4">
+                    {details.genres.map((g) => (
+                      <span
+                        key={g.id}
+                        className="rounded-full border border-[#D4FF3E]/30 bg-[#1A1A1D] px-4 py-1.5 text-xs font-bold text-[#D4FF3E]"
+                      >
+                        {g.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <p className="max-w-3xl text-lg leading-relaxed text-[#8A8A8E] font-medium">
+                {details.overview}
+              </p>
             </div>
 
-            {/* Cast Section */}
+            {/* TV Season Selector */}
+            {type === "tv" && details.seasons && (
+              <div className="pt-4">
+                <SeasonSelector mediaId={id} seasons={details.seasons} />
+              </div>
+            )}
+
+            {/* Premium Actor Cast Cards */}
             {details.cast && details.cast.length > 0 && (
-              <div className="space-y-4 pt-8 border-t border-white/10">
-                <h3 className="text-xl font-semibold text-white">Top Cast</h3>
-                <div className="grid grid-cols-2 gap-4 pb-2 sm:grid-cols-3 md:flex md:overflow-x-auto md:pb-4 scrollbar-hide">
+              <div className="space-y-6 pt-10">
+                <h3 className="text-3xl font-bold text-white tracking-tight">Top Cast</h3>
+                <div className="flex gap-6 overflow-x-auto pb-6 hide-scrollbar snap-x snap-mandatory">
                   {details.cast.slice(0, 10).map((actor: CastMember) => (
                     <div
                       key={actor.id}
-                      className="flex flex-col gap-2 w-full text-center md:w-24 md:shrink-0"
+                      className="flex flex-col gap-3 w-[140px] shrink-0 snap-start group cursor-pointer"
                     >
-                      <div className="relative h-24 w-24 mx-auto overflow-hidden rounded-full border-2 border-white/10 bg-neutral-800">
+                      <div className="relative h-[200px] w-full overflow-hidden rounded-3xl bg-[#1A1A1D] border border-white/5 shadow-xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:border-[#D4FF3E]/30">
                         {actor.profilePath ? (
                           <Image
                             src={getTMDBImageUrl(actor.profilePath, "w185")}
@@ -195,63 +206,50 @@ export default async function WatchPage({
                             className="object-cover"
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center text-xs text-gray-500">
-                            No Image
+                          <div className="flex h-full w-full items-center justify-center text-xs font-bold text-[#8A8A8E]">
+                            N/A
                           </div>
                         )}
                       </div>
-                      <p className="text-sm font-medium leading-tight text-white line-clamp-2">
-                        {actor.name}
-                      </p>
-                      <p className="text-xs text-gray-400 line-clamp-1">
-                        {actor.character}
-                      </p>
+                      <div>
+                        <p className="text-[15px] font-bold text-white line-clamp-1 group-hover:text-[#D4FF3E] transition-colors">{actor.name}</p>
+                        <p className="text-[13px] font-medium text-[#8A8A8E] line-clamp-1">{actor.character}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
-
+            
             {/* Mobile Recommendations */}
             {details.similar.length > 0 && (
-              <div className="space-y-4 border-t border-white/10 pt-6 lg:hidden">
-                <h3 className="text-lg font-semibold text-white">
-                  More to Watch
-                </h3>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {details.similar.slice(0, 6).map((rec) => (
+              <div className="space-y-6 pt-10 lg:hidden">
+                <h3 className="text-3xl font-bold text-white tracking-tight">More to Watch</h3>
+                <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar">
+                  {details.similar.slice(0, 8).map((rec) => (
                     <Link
                       href={`/watch/${type}/${rec.id}`}
                       key={rec.id}
-                      className="group flex min-w-0 gap-3 rounded-lg border border-white/10 bg-[#131313]/90 p-2 transition-colors hover:bg-[#ffa31a]/10"
+                      className="group shrink-0 w-[240px] snap-center"
                     >
-                      <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-md bg-neutral-800">
+                      <div className="relative h-[160px] w-full overflow-hidden rounded-[2rem] bg-[#1A1A1D] border border-transparent group-hover:border-[#D4FF3E]/30 transition-all shadow-xl">
                         {rec.backdropPath ? (
                           <Image
                             src={getTMDBImageUrl(rec.backdropPath, "w300")}
                             alt={rec.title || "Movie"}
                             fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-110"
+                            className="object-cover transition-transform duration-500 group-hover:scale-110"
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-white/5 text-xs text-gray-500">
-                            No Image
-                          </div>
+                          <div className="flex h-full w-full items-center justify-center bg-white/5">N/A</div>
                         )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <h4 className="line-clamp-2 text-sm font-medium text-white transition-colors group-hover:text-[#ffd38a]">
-                          {rec.title}
-                        </h4>
-                        <div className="mt-1 flex items-center gap-1">
-                          <Star
-                            size={12}
-                            className="text-[#ffa31a]"
-                            fill="currentColor"
-                          />
-                          <span className="text-xs text-gray-400">
-                            {rec.voteAverage?.toFixed(1) || "N/A"}
-                          </span>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent flex flex-col justify-end p-4">
+                           <h4 className="line-clamp-1 text-sm font-bold text-white group-hover:text-[#D4FF3E] transition-colors">
+                             {rec.title}
+                           </h4>
+                           <div className="flex items-center gap-1 mt-1 text-xs font-bold text-[#8A8A8E]">
+                              <span className="text-[#D4FF3E]">★ {rec.voteAverage?.toFixed(1)}</span>
+                           </div>
                         </div>
                       </div>
                     </Link>
@@ -261,58 +259,50 @@ export default async function WatchPage({
             )}
           </div>
 
-          {/* Recommendations Sidebar */}
-          <div className="hidden lg:block space-y-6 lg:pl-1">
-            <div className="sticky top-24 rounded-2xl border border-white/10 bg-[#131313]/90 p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold mb-4 text-white">
-                More Like This
-              </h3>
-              <div className="space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto pr-2 custom-scrollbar">
-                {details.similar.slice(0, 6).map((rec) => (
-                  <Link
-                    href={`/watch/${type}/${rec.id}`}
-                    key={rec.id}
-                    className="group flex gap-3 rounded-lg p-2 transition-colors hover:bg-[#ffa31a]/10"
-                  >
-                    <div className="relative h-16 w-28 shrink-0 overflow-hidden rounded-md bg-neutral-800">
-                      {rec.backdropPath ? (
-                        <Image
-                          src={getTMDBImageUrl(rec.backdropPath, "w300")}
-                          alt={rec.title || "Movie"}
-                          fill
-                          className="object-cover transition-transform duration-300 group-hover:scale-110"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-white/5 text-xs text-gray-500">
-                          No Image
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col justify-center min-w-0">
-                      <h4 className="line-clamp-2 text-sm font-medium text-white transition-colors group-hover:text-[#ffd38a]">
+          {/* Recommendations Sidebar - Grid Stacked */}
+          <div className="hidden lg:block space-y-8 pl-4">
+            <h3 className="text-3xl font-bold mb-6 text-white tracking-tight">More Like This</h3>
+            <div className="grid grid-cols-1 gap-6">
+              {details.similar.slice(0, 6).map((rec) => (
+                <Link
+                  href={`/watch/${type}/${rec.id}`}
+                  key={rec.id}
+                  className="group relative h-[220px] w-full overflow-hidden rounded-[2.5rem] bg-[#1A1A1D] shadow-xl border border-transparent transition-all hover:-translate-y-2 hover:border-[#D4FF3E]/30"
+                >
+                    {rec.backdropPath ? (
+                      <Image
+                        src={getTMDBImageUrl(rec.backdropPath, "w500")}
+                        alt={rec.title || "Movie"}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    ) : (
+                       <div className="flex h-full w-full items-center justify-center bg-white/5">N/A</div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                    
+                    <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-[#D4FF3E] text-black flex items-center justify-center opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 shadow-xl">
+                       <Play className="w-5 h-5 fill-current" />
+                    </button>
+
+                    <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                      <h4 className="line-clamp-2 text-lg font-bold text-white drop-shadow-md">
                         {rec.title}
                       </h4>
-                      <div className="flex items-center gap-1 mt-1">
-                        <Star
-                          size={12}
-                          className="text-[#ffa31a]"
-                          fill="currentColor"
-                        />
-                        <span className="text-xs text-gray-400">
-                          {rec.voteAverage?.toFixed(1) || "N/A"}
-                        </span>
+                      <div className="flex items-center gap-2 mt-2">
+                         <span className="text-xs font-bold bg-[#D4FF3E]/10 border border-[#D4FF3E]/20 text-[#D4FF3E] px-2 py-0.5 rounded-full backdrop-blur-md">
+                            ★ {rec.voteAverage?.toFixed(1) || "N/A"}
+                         </span>
+                         <span className="text-xs font-bold text-[#8A8A8E] bg-black/60 px-2 py-0.5 rounded-full backdrop-blur-md">
+                            {rec.releaseDate?.substring(0,4)}
+                         </span>
                       </div>
                     </div>
-                  </Link>
-                ))}
-                {details.similar.length === 0 && (
-                  <p className="text-sm text-gray-500">
-                    No recommendations available.
-                  </p>
-                )}
-              </div>
+                </Link>
+              ))}
             </div>
           </div>
+          
         </div>
       </main>
     </div>

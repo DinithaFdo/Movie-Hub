@@ -27,15 +27,14 @@ export function Skeleton({ className, count = 1 }: SkeletonProps) {
 
 export function MediaCardSkeleton() {
   return (
-    <div className="rounded-xl overflow-hidden shadow-elevation-2 bg-[var(--bg-elevated)]">
-      <Skeleton className="w-full aspect-video" />
-      <div className="p-4 space-y-3">
-        <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-3 w-full" />
-        <Skeleton className="h-3 w-2/3" />
-        <div className="flex gap-2 pt-2">
-          <Skeleton className="h-8 w-16 rounded-full" />
-          <Skeleton className="h-8 w-16 rounded-full" />
+    <div className="rounded-[2.5rem] overflow-hidden shadow-xl bg-black/40 border border-white/5 w-full h-[280px] md:h-[320px] relative">
+      <Skeleton className="absolute inset-0 w-full h-full" />
+      <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 p-6 space-y-3 z-10">
+        <Skeleton className="h-5 w-3/4 rounded-full bg-white/20" />
+        <div className="flex gap-2">
+          <Skeleton className="h-4 w-12 rounded-full bg-[#D4FF3E]/20" />
+          <Skeleton className="h-4 w-16 rounded-full bg-white/20" />
         </div>
       </div>
     </div>
@@ -44,7 +43,7 @@ export function MediaCardSkeleton() {
 
 export function MediaGridSkeleton({ count = 6 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
       {Array.from({ length: count }).map((_, i) => (
         <MediaCardSkeleton key={i} />
       ))}

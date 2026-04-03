@@ -3,146 +3,112 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clapperboard, Film, Menu, Home, Star, Search, Tv } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { cn } from "@/utils/helpers";
+import { usePreloader } from "@/components/context/preloader-context";
 import { LiveSearch } from "@/components/search/live-search";
-import { Button } from "@/components/ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 
-const desktopNavItems = [
+const navItems = [
   { href: "/", label: "Home" },
   { href: "/movies", label: "Movies" },
-  { href: "/tv", label: "TV Shows" },
-  { href: "/favorites", label: "Watchlist" },
-];
-
-const mobileNavItems = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/movies", label: "Movies", icon: Film },
-  { href: "/tv", label: "Series", icon: Tv },
-  { href: "/favorites", label: "My List", icon: Star },
+  { href: "/tv", label: "Series" },
+  { href: "/favorites", label: "Favorites" },
 ];
 
 export function AppNavbar() {
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const pathname = usePathname();
+  const { hasLoaded } = usePreloader();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
-      <div className="mx-auto max-w-7xl px-4 pb-2 pt-3 sm:px-6 lg:px-8">
-        <div className="glass-panel flex h-16 items-center justify-between rounded-2xl px-4 sm:px-5">
-          <div className="flex items-center gap-8">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ffa31a] text-black shadow-[0_0_18px_rgba(255,163,26,0.25)]">
-                <Clapperboard size={16} />
-              </div>
-              <span className="text-lg font-bold tracking-wide text-white">
-                MOVIE<span className="text-[#ffa31a]">HUB</span>
-              </span>
-            </Link>
+    <motion.header 
+      className="absolute top-0 left-0 right-0 z-50 pt-6 px-4 md:px-12 flex items-center justify-between pointer-events-auto"
+    >
+      {/* Left: Bold Text Logo with layoutId linking to Preloader */}
+      <Link href="/" className="flex items-center gap-2">
+        <motion.span 
+          layoutId="logo"
+          className="text-xl md:text-2xl font-black tracking-tight text-[#D4FF3E]"
+        >
+          MOVIEHUB
+        </motion.span>
+      </Link>
 
-            <NavigationMenu className="hidden md:flex">
-              <NavigationMenuList className="gap-0">
-                {desktopNavItems.map((item) => (
-                  <NavigationMenuItem key={item.label}>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        navigationMenuTriggerStyle,
-                        pathname === item.href
-                          ? "text-[#ffa31a]"
-                          : "text-white/90 hover:text-[#ffc766]",
-                      )}
-                    >
-                      {item.label}
-                    </Link>
-                  </NavigationMenuItem>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
-          </div>
-
-          <div className="hidden w-full max-w-sm md:block">
-            <LiveSearch />
-          </div>
-
-          <div className="flex items-center gap-2 md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Open Search"
-              onClick={() => setMobileSearchOpen((prev) => !prev)}
-              className="text-white hover:text-[#ffa31a]"
+      {/* Center: Pill-shaped navigation spanning from pill to long nav */}
+      <motion.nav 
+        initial={{ width: 40, opacity: 0 }}
+        animate={hasLoaded ? { width: "auto", opacity: 1 } : { width: 40, opacity: 0 }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        className="hidden md:flex items-center bg-[#1A1A1D]/80 backdrop-blur-xl border border-white/5 rounded-full px-2 py-1.5 shadow-2xl overflow-hidden whitespace-nowrap"
+      >
+        {navItems.map((item) => {
+          const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+          return (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="relative px-6 py-2 text-sm font-semibold transition-colors rounded-full shrink-0"
             >
-              <Search size={18} />
-            </Button>
+              <span className={cn("relative z-10", isActive ? "text-black" : "text-white hover:text-[#8A8A8E]")}>
+                {item.label}
+              </span>
+              {isActive && (
+                <motion.div
+                  layoutId="navbar-active"
+                  className="absolute inset-0 bg-[#D4FF3E] rounded-full z-0"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+              )}
+            </Link>
+          );
+        })}
+      </motion.nav>
 
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Open Menu"
-                  className="text-white hover:text-[#ffa31a]"
-                >
-                  <Menu size={20} />
-                </Button>
-              </SheetTrigger>
-              <SheetContent
-                side="bottom"
-                className="rounded-t-3xl bg-[#111111]/95 backdrop-blur-xl"
-              >
-                <SheetHeader>
-                  <SheetTitle className="text-[#ffa31a]">Navigate</SheetTitle>
-                </SheetHeader>
-                <nav className="mt-3 grid gap-3">
-                  {mobileNavItems.map((item) => (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      className={cn(
-                        "flex items-center gap-3 rounded-xl border px-4 py-4 text-base font-semibold",
-                        pathname === item.href
-                          ? "border-[#ffa31a] bg-[#ffa31a]/15 text-[#ffa31a]"
-                          : "border-[#2a2a2a] bg-[#181818] text-white hover:border-[#ffa31a]/50",
-                      )}
-                    >
-                      <item.icon size={18} />
-                      {item.label}
-                    </Link>
-                  ))}
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-      </div>
+      {/* Right: Actions fading in smoothly with Search Exansion */}
+      <motion.div 
+        initial={{ opacity: 0, x: 20 }}
+        animate={hasLoaded ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+        className="flex items-center gap-3 relative"
+      >
+        <motion.div layout className="flex items-center justify-end mr-2 md:mr-0">
+           <LiveSearch 
+             isExpanded={isSearchOpen} 
+             onFocus={() => setIsSearchOpen(true)}
+             onBlur={() => setIsSearchOpen(false)}
+           />
+        </motion.div>
 
-      <AnimatePresence>
-        {mobileSearchOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="mx-4 mt-2 rounded-2xl border border-[#2a2a2a] bg-black/90 px-4 pb-4 pt-3 shadow-[0_10px_35px_rgba(0,0,0,0.45)] md:hidden"
-          >
-            <LiveSearch />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+        {/* Mobile Hamburger Button */}
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden p-2 text-white bg-white/5 rounded-full backdrop-blur-md"
+        >
+           {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      </motion.div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute top-full left-0 right-0 mt-4 mx-4 bg-[#1A1A1D]/95 backdrop-blur-3xl border border-white/10 rounded-[2rem] p-6 flex flex-col gap-4 shadow-2xl z-50 pointer-events-auto"
+        >
+          {navItems.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-lg font-bold text-white/80 hover:text-[#D4FF3E] transition-colors py-2 border-b border-white/5 last:border-0"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </motion.div>
+      )}
+    </motion.header>
   );
 }
