@@ -1,4 +1,3 @@
-
 import {
   getTrendingMovies,
   getTrendingTV,
@@ -9,10 +8,32 @@ import { CurvedCarousel } from "@/components/sections/CurvedCarousel";
 import { NewsletterFooter } from "@/components/layout/newsletter-footer";
 import dynamic from "next/dynamic";
 
-const FeaturesGrid = dynamic(() => import("@/components/sections/features-grid").then(mod => mod.FeaturesGrid), { ssr: true });
-const StackedCarousel = dynamic(() => import("@/components/sections/stacked-carousel").then(mod => mod.StackedCarousel), { ssr: true });
-const TabbedGrid = dynamic(() => import("@/components/sections/tabbed-grid").then(mod => mod.TabbedGrid), { ssr: true });
-const ContinueWatching = dynamic(() => import("@/components/sections/continue-watching").then(mod => mod.ContinueWatching), { ssr: true });
+const FeaturesGrid = dynamic(
+  () =>
+    import("@/components/sections/features-grid").then(
+      (mod) => mod.FeaturesGrid,
+    ),
+  { ssr: true },
+);
+const StackedCarousel = dynamic(
+  () =>
+    import("@/components/sections/stacked-carousel").then(
+      (mod) => mod.StackedCarousel,
+    ),
+  { ssr: true },
+);
+const TabbedGrid = dynamic(
+  () =>
+    import("@/components/sections/tabbed-grid").then((mod) => mod.TabbedGrid),
+  { ssr: true },
+);
+const ContinueWatching = dynamic(
+  () =>
+    import("@/components/sections/continue-watching").then(
+      (mod) => mod.ContinueWatching,
+    ),
+  { ssr: true },
+);
 
 export const revalidate = 3600; // ISR - revalidate every hour
 
@@ -25,10 +46,14 @@ export default async function Home() {
       getTopRatedMovies(),
     ]);
 
-  const trendingMoviesData = trendingMovies.status === "fulfilled" ? trendingMovies.value : [];
-  const trendingTVData = trendingTV.status === "fulfilled" ? trendingTV.value : [];
-  const popularMoviesData = popularMovies.status === "fulfilled" ? popularMovies.value : [];
-  const topRatedMoviesData = topRatedMovies.status === "fulfilled" ? topRatedMovies.value : [];
+  const trendingMoviesData =
+    trendingMovies.status === "fulfilled" ? trendingMovies.value : [];
+  const trendingTVData =
+    trendingTV.status === "fulfilled" ? trendingTV.value : [];
+  const popularMoviesData =
+    popularMovies.status === "fulfilled" ? popularMovies.value : [];
+  const topRatedMoviesData =
+    topRatedMovies.status === "fulfilled" ? topRatedMovies.value : [];
 
   return (
     <main className="relative min-h-screen overflow-x-clip bg-[var(--bg-base)]">
@@ -41,7 +66,7 @@ export default async function Home() {
       <FeaturesGrid />
       <StackedCarousel movies={topRatedMoviesData} />
       <TabbedGrid movies={popularMoviesData} tvShows={trendingTVData} />
-      
+
       <NewsletterFooter />
     </main>
   );

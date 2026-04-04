@@ -2,18 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { MediaCard } from "@/components/cards/media-card";
-import { Pagination } from "@/components/ui/pagination";
 import { MediaGridSkeleton } from "@/components/skeletons/skeleton";
 import { PageHeader, PageShell } from "@/components/layout/page-shell";
-import { usePagination } from "@/hooks";
 import type { MovieSummary } from "@/types/movie";
-import { Film } from "lucide-react";
+import { Film, Loader2 } from "lucide-react";
 
 export default function MoviesPage() {
-  const { page, goToPage } = usePagination(1);
   const [movies, setMovies] = useState<MovieSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [totalPages, setTotalPages] = useState(100);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -22,7 +21,7 @@ export default function MoviesPage() {
         const response = await fetch(`/api/movies?page=${page}`);
         const data = (await response.json()) as MovieSummary[];
         setMovies(data);
-        setTotalPages(100);
+        setHasMore(data.length > 0);
       } catch (error) {
         console.error("Error fetching movies:", error);
       } finally {
@@ -31,7 +30,35 @@ export default function MoviesPage() {
     };
 
     fetchMovies();
-  }, [page]);
+  }, []);
+
+  const loadMore = async () => {
+    if (!hasMore || isLoading || isLoadingMore) return;
+
+    const nextPage = page + 1;
+    setIsLoadingMore(true);
+
+    try {
+      const response = await fetch(`/api/movies?page=${nextPage}`);
+      const data = (await response.json()) as MovieSummary[];
+
+      if (data.length === 0) {
+        setHasMore(false);
+        return;
+      }
+
+      setMovies((current) => {
+        const existingIds = new Set(current.map((movie) => movie.id));
+        const uniqueNewMovies = data.filter((movie) => !existingIds.has(movie.id));
+        return [...current, ...uniqueNewMovies];
+      });
+      setPage(nextPage);
+    } catch (error) {
+      console.error("Error loading more movies:", error);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
 
   return (
     <PageShell>
@@ -53,12 +80,29 @@ export default function MoviesPage() {
               ))}
             </div>
 
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={goToPage}
-              isLoading={isLoading}
-            />
+            {hasMore ? (
+              <div className="flex justify-center pb-8">
+                <button
+                  type="button"
+                  onClick={loadMore}
+                  disabled={isLoadingMore}
+                  className="inline-flex items-center gap-2 rounded-full border border-[#D4FF3E]/25 bg-[#D4FF3E]/10 px-6 py-3 text-sm font-bold text-[#D4FF3E] transition-all duration-300 hover:bg-[#D4FF3E] hover:text-black hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isLoadingMore ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Loading more
+                    </>
+                  ) : (
+                    "Browse more"
+                  )}
+                </button>
+              </div>
+            ) : (
+              <div className="pb-8 text-center text-sm text-[var(--text-muted)]">
+                You&apos;ve reached the end of the list.
+              </div>
+            )}
           </>
         )}
       </div>

@@ -10,8 +10,7 @@ interface UserPreferences {
   theme: "light" | "dark" | "system";
   language: string;
   quality: "auto" | "480p" | "720p" | "1080p";
-  enableNotifications: boolean;
-  enableAnalytics: boolean;
+  enableClickSounds: boolean;
   itemsPerPage: number;
   enableAutoplay: boolean;
 }
@@ -32,8 +31,7 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   theme: "dark",
   language: "en",
   quality: "auto",
-  enableNotifications: true,
-  enableAnalytics: true,
+  enableClickSounds: false,
   itemsPerPage: 20,
   enableAutoplay: true,
 };

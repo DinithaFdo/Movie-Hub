@@ -10,7 +10,9 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+import { usePreferencesStore } from "@/stores/preferences";
 import { cn } from "@/utils/helpers";
+import { playModernUiSound } from "@/utils/sound-effects";
 
 interface PaginationProps {
   currentPage: number;
@@ -41,6 +43,13 @@ export function Pagination({
     { length: endPage - startPage + 1 },
     (_, i) => startPage + i,
   );
+  const { preferences } = usePreferencesStore();
+
+  const triggerPageSound = () => {
+    if (preferences.enableClickSounds) {
+      void playModernUiSound("page");
+    }
+  };
 
   const PaginationButton = ({
     isActive,
@@ -56,8 +65,9 @@ export function Pagination({
     <button
       onClick={onClick}
       disabled={disabled || isLoading}
+      type="button"
       className={cn(
-        "h-10 min-w-10 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center",
+        "h-10 min-w-10 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center",
         isActive
           ? "bg-[var(--primary)] text-black shadow-elevation-2"
           : "bg-[var(--bg-elevated)] text-[var(--text-primary)] hover:bg-[var(--bg-slight)] border border-[var(--border-default)] hover:border-[var(--primary)]",
@@ -72,7 +82,10 @@ export function Pagination({
     <div className="flex items-center justify-center gap-2 flex-wrap py-6 px-4">
       {/* First Page Button */}
       <PaginationButton
-        onClick={() => onPageChange(1)}
+        onClick={() => {
+          triggerPageSound();
+          onPageChange(1);
+        }}
         disabled={currentPage === 1}
       >
         <ChevronsLeft className="h-4 w-4" />
@@ -80,7 +93,10 @@ export function Pagination({
 
       {/* Previous Page Button */}
       <PaginationButton
-        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+        onClick={() => {
+          triggerPageSound();
+          onPageChange(Math.max(1, currentPage - 1));
+        }}
         disabled={currentPage === 1}
       >
         <ChevronLeft className="h-4 w-4" />
@@ -90,7 +106,10 @@ export function Pagination({
       {startPage > 1 && (
         <>
           <PaginationButton
-            onClick={() => onPageChange(1)}
+            onClick={() => {
+              triggerPageSound();
+              onPageChange(1);
+            }}
             isActive={currentPage === 1}
           >
             1
@@ -106,7 +125,10 @@ export function Pagination({
         <PaginationButton
           key={page}
           isActive={currentPage === page}
-          onClick={() => onPageChange(page)}
+          onClick={() => {
+            triggerPageSound();
+            onPageChange(page);
+          }}
         >
           {page}
         </PaginationButton>
@@ -119,7 +141,10 @@ export function Pagination({
             <span className="text-[var(--text-muted)]">...</span>
           )}
           <PaginationButton
-            onClick={() => onPageChange(totalPages)}
+            onClick={() => {
+              triggerPageSound();
+              onPageChange(totalPages);
+            }}
             isActive={currentPage === totalPages}
           >
             {totalPages}
@@ -129,7 +154,10 @@ export function Pagination({
 
       {/* Next Page Button */}
       <PaginationButton
-        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+        onClick={() => {
+          triggerPageSound();
+          onPageChange(Math.min(totalPages, currentPage + 1));
+        }}
         disabled={currentPage === totalPages}
       >
         <ChevronRight className="h-4 w-4" />
@@ -137,7 +165,10 @@ export function Pagination({
 
       {/* Last Page Button */}
       <PaginationButton
-        onClick={() => onPageChange(totalPages)}
+        onClick={() => {
+          triggerPageSound();
+          onPageChange(totalPages);
+        }}
         disabled={currentPage === totalPages}
       >
         <ChevronsRight className="h-4 w-4" />

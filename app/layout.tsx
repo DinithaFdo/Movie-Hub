@@ -20,8 +20,12 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  ),
   title: "Movie-Hub",
-  description: "Discover the Series Streaming Experience with Absolutely No Ads",
+  description:
+    "Discover the Series Streaming Experience with Absolutely No Ads",
 };
 
 export const viewport: Viewport = {
@@ -38,7 +42,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.variable} antialiased`} suppressHydrationWarning>
+      <body
+        className={`${poppins.variable} antialiased`}
+        suppressHydrationWarning
+      >
         <EnhancedThemeProvider>
           <QueryProvider>
             <FavoritesProvider>

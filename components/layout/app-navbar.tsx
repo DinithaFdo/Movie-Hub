@@ -25,18 +25,19 @@ export function AppNavbar() {
   const { isTheaterMode } = useUIStore();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
-    <motion.header 
+    <motion.header
       initial={{ opacity: 1, y: 0 }}
       animate={{ opacity: isTheaterMode ? 0 : 1, y: isTheaterMode ? -50 : 0 }}
       transition={{ duration: 0.5 }}
-      className={`absolute top-0 left-0 right-0 z-50 pt-6 px-4 md:px-12 flex items-center justify-between ${isTheaterMode ? 'pointer-events-none' : 'pointer-events-auto'}`}
+      className={`absolute top-0 left-0 right-0 z-50 pt-6 px-4 md:px-12 flex items-center justify-between ${isTheaterMode ? "pointer-events-none" : "pointer-events-auto"}`}
     >
       {/* Left: Bold Text Logo with layoutId linking to Preloader */}
       <div className="md:flex-1 flex justify-start basis-0">
         <Link href="/" className="flex items-center gap-2">
-          <motion.span 
+          <motion.span
             layoutId="logo"
             className="text-xl md:text-2xl font-black tracking-tight text-[#D4FF3E]"
           >
@@ -46,21 +47,30 @@ export function AppNavbar() {
       </div>
 
       {/* Center: Pill-shaped navigation spanning from pill to long nav */}
-      <motion.nav 
+      <motion.nav
         initial={{ width: 60, opacity: 0 }}
-        animate={hasLoaded ? { width: "auto", opacity: 1 } : { width: 60, opacity: 0 }}
+        animate={
+          hasLoaded ? { width: "auto", opacity: 1 } : { width: 60, opacity: 0 }
+        }
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
         className="hidden md:flex items-center justify-center bg-[#1A1A1D]/80 backdrop-blur-xl border border-white/5 rounded-full p-1.5 shadow-2xl overflow-hidden whitespace-nowrap"
       >
         {navItems.map((item) => {
-          const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+          const isActive =
+            pathname === item.href ||
+            (item.href !== "/" && pathname.startsWith(item.href));
           return (
             <Link
               key={item.label}
               href={item.href}
               className="relative px-6 py-2 text-sm font-semibold transition-colors rounded-full shrink-0"
             >
-              <span className={cn("relative z-10", isActive ? "text-black" : "text-white hover:text-[#8A8A8E]")}>
+              <span
+                className={cn(
+                  "relative z-10",
+                  isActive ? "text-black" : "text-white hover:text-[#8A8A8E]",
+                )}
+              >
                 {item.label}
               </span>
               {isActive && (
@@ -76,43 +86,51 @@ export function AppNavbar() {
       </motion.nav>
 
       {/* Right: Actions fading in smoothly with Search Exansion */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={hasLoaded ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
         transition={{ duration: 0.5, delay: 0.6 }}
         className="flex items-center justify-end gap-3 relative md:flex-1 basis-0"
       >
-        <motion.div layout className="flex items-center justify-end mr-2 md:mr-0">
-           <LiveSearch 
-             isExpanded={isSearchOpen} 
-             onFocus={() => setIsSearchOpen(true)}
-             onBlur={() => setIsSearchOpen(false)}
-           />
+        <motion.div
+          layout
+          className="flex items-center justify-end mr-2 md:mr-0"
+        >
+          <LiveSearch
+            isExpanded={isSearchOpen}
+            onFocus={() => setIsSearchOpen(true)}
+            onBlur={() => setIsSearchOpen(false)}
+          />
         </motion.div>
 
-        <SettingsDialog>
-          <button className="hidden md:flex p-2 text-white bg-white/5 rounded-full backdrop-blur-md hover:bg-[#D4FF3E] hover:text-black transition-colors">
+        <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+          <button
+            type="button"
+            onClick={() => setIsSettingsOpen(true)}
+            aria-label="Open settings"
+            className="hidden md:flex p-2 text-white bg-white/5 rounded-full backdrop-blur-md hover:bg-[#D4FF3E] hover:text-black transition-colors"
+          >
             <Settings size={20} />
           </button>
         </SettingsDialog>
 
         {/* Mobile Hamburger Button */}
-        <button 
+        <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="md:hidden p-2 text-white bg-white/5 rounded-full backdrop-blur-md"
         >
-           {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </motion.div>
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="fixed inset-0 bg-[#0D0D0F] z-[60] flex flex-col justify-center px-8"
         >
-          <button 
+          <button
             onClick={() => setIsMobileMenuOpen(false)}
             className="absolute top-6 right-4 md:right-12 p-3 text-white bg-white/10 rounded-full hover:bg-[#D4FF3E] hover:text-black transition-colors"
           >
@@ -142,9 +160,17 @@ export function AppNavbar() {
               transition={{ delay: 0.4 }}
               className="mt-8"
             >
-              <SettingsDialog>
-                <button 
-                  onClick={() => setIsMobileMenuOpen(false)}
+              <SettingsDialog
+                open={isSettingsOpen}
+                onOpenChange={setIsSettingsOpen}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsSettingsOpen(true);
+                  }}
+                  aria-label="Open settings"
                   className="flex items-center gap-3 text-2xl font-bold text-white hover:text-[#D4FF3E] transition-colors"
                 >
                   <Settings size={28} />

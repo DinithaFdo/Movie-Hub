@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getTMDBImageUrl } from "@/services/tmdb";
 import type { MovieSummary } from "@/types/movie";
+import { usePreferencesStore } from "@/stores/preferences";
+import { playModernUiSound } from "@/utils/sound-effects";
 
 interface StackedCarouselProps {
   movies: MovieSummary[];
@@ -14,11 +16,22 @@ interface StackedCarouselProps {
 
 export function StackedCarousel({ movies }: StackedCarouselProps) {
   const [index, setIndex] = useState(0);
+  const { preferences } = usePreferencesStore();
 
   if (!movies || movies.length === 0) return null;
 
-  const handleNext = () => setIndex((prev) => (prev + 1) % movies.length);
-  const handlePrev = () => setIndex((prev) => (prev - 1 + movies.length) % movies.length);
+  const handleNext = () => {
+    if (preferences.enableClickSounds) {
+      void playModernUiSound("nav");
+    }
+    setIndex((prev) => (prev + 1) % movies.length);
+  };
+  const handlePrev = () => {
+    if (preferences.enableClickSounds) {
+      void playModernUiSound("nav");
+    }
+    setIndex((prev) => (prev - 1 + movies.length) % movies.length);
+  };
 
   // Take 5 items starting from current index for the stack
   const visibleCards = Array.from({ length: 5 }).map((_, i) => {
@@ -28,7 +41,7 @@ export function StackedCarousel({ movies }: StackedCarouselProps) {
   return (
     <section className="w-full max-w-7xl mx-auto px-4 md:px-12 py-12 md:py-20 overflow-hidden">
       <div className="text-center mb-16 relative z-10">
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -36,7 +49,7 @@ export function StackedCarousel({ movies }: StackedCarouselProps) {
         >
           Your taste
         </motion.h2>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -58,17 +71,19 @@ export function StackedCarousel({ movies }: StackedCarouselProps) {
               const zIndex = 10 - absOffset;
               const scale = 1 - absOffset * 0.15;
               const xPos = offset * 220; // Distance between cards
-              
+
               return (
                 <motion.div
                   key={`${movie.id}-${logicalIndex}`}
                   initial={{ opacity: 0, x: offset * 300, scale: scale * 0.8 }}
-                  animate={{ 
-                    opacity: absOffset > 2 ? 0 : 1, 
-                    x: xPos, 
-                    scale, 
+                  animate={{
+                    opacity: absOffset > 2 ? 0 : 1,
+                    x: xPos,
+                    scale,
                     zIndex,
-                    filter: isCenter ? "brightness(1) blur(0px)" : `brightness(${1 - absOffset * 0.3}) blur(${absOffset}px)`
+                    filter: isCenter
+                      ? "brightness(1) blur(0px)"
+                      : `brightness(${1 - absOffset * 0.3}) blur(${absOffset}px)`,
                   }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -99,16 +114,23 @@ export function StackedCarousel({ movies }: StackedCarouselProps) {
                   />
                   {isCenter && (
                     <>
-                      <Link href={`/watch/${movie.mediaType || 'movie'}/${movie.id}`} className="absolute inset-0 z-10 cursor-pointer" />
-                      <motion.div 
+                      <Link
+                        href={`/watch/${movie.mediaType || "movie"}/${movie.id}`}
+                        className="absolute inset-0 z-10 cursor-pointer"
+                      />
+                      <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                         className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 to-transparent pointer-events-none z-20"
                       >
-                        <h3 className="text-xl font-bold text-white mb-2">{movie.title}</h3>
+                        <h3 className="text-xl font-bold text-white mb-2">
+                          {movie.title}
+                        </h3>
                         <div className="flex items-center gap-2">
-                           <span className="text-xs font-bold bg-[#D4FF3E] text-black px-2 py-1 rounded-md">★ {Number(movie.voteAverage).toFixed(1)}</span>
+                          <span className="text-xs font-bold bg-[#D4FF3E] text-black px-2 py-1 rounded-md">
+                            ★ {Number(movie.voteAverage).toFixed(1)}
+                          </span>
                         </div>
                       </motion.div>
                     </>
@@ -121,12 +143,20 @@ export function StackedCarousel({ movies }: StackedCarouselProps) {
 
         <div className="absolute bottom-0 flex flex-col items-center gap-6 z-20">
           <div className="flex items-center gap-4">
-             <button onClick={handlePrev} className="w-12 h-12 rounded-full border border-white/20 bg-black/60 flex items-center justify-center hover:bg-[#D4FF3E] hover:text-black hover:border-transparent transition-all">
-                <ChevronLeft size={20} />
-             </button>
-             <button onClick={handleNext} className="w-12 h-12 rounded-full border border-white/20 bg-black/60 flex items-center justify-center hover:bg-[#D4FF3E] hover:text-black hover:border-transparent transition-all">
-                <ChevronRight size={20} />
-             </button>
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="w-12 h-12 rounded-full border border-white/20 bg-black/60 flex items-center justify-center hover:bg-[#D4FF3E] hover:text-black hover:border-transparent transition-all duration-300 hover:scale-105"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              type="button"
+              onClick={handleNext}
+              className="w-12 h-12 rounded-full border border-white/20 bg-black/60 flex items-center justify-center hover:bg-[#D4FF3E] hover:text-black hover:border-transparent transition-all duration-300 hover:scale-105"
+            >
+              <ChevronRight size={20} />
+            </button>
           </div>
         </div>
       </div>

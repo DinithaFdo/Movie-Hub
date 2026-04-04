@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { MediaCard } from "@/components/cards/media-card";
 import { Pagination } from "@/components/ui/pagination";
@@ -21,8 +21,16 @@ export default function SearchPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const { addSearch } = useSearchHistoryStore();
+  const requestIdRef = useRef(0);
+  const abortRef = useRef<AbortController | null>(null);
 
   const debouncedQuery = useDebounce(query, 300);
+
+  useEffect(() => {
+    goToPage(1);
+    setResults([]);
+    setTotalPages(0);
+  }, [debouncedQuery, goToPage]);
 
   const handleSearch = useCallback(
     async (searchQuery: string, pageNum: number) => {
@@ -32,13 +40,18 @@ export default function SearchPage() {
         return;
       }
 
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      const requestId = ++requestIdRef.current;
+
       setIsLoading(true);
       try {
         addSearch(searchQuery);
 
         const response = await fetch(
           `/api/search?q=${encodeURIComponent(searchQuery)}&page=${pageNum}`,
-          { cache: "no-store" },
+          { cache: "no-store", signal: controller.signal },
         );
 
         const data = (await response.json()) as {
@@ -48,14 +61,25 @@ export default function SearchPage() {
           totalResults: number;
         };
 
+        if (requestId !== requestIdRef.current || controller.signal.aborted) {
+          return;
+        }
+
         setResults(data.results || []);
         setTotalPages(data.totalPages || 1);
       } catch (error) {
+        if ((error as { name?: string }).name === "AbortError") {
+          return;
+        }
         console.error("Search error:", error);
-        setResults([]);
-        setTotalPages(1);
+        if (requestId === requestIdRef.current) {
+          setResults([]);
+          setTotalPages(1);
+        }
       } finally {
-        setIsLoading(false);
+        if (requestId === requestIdRef.current) {
+          setIsLoading(false);
+        }
       }
     },
     [addSearch],
@@ -63,6 +87,9 @@ export default function SearchPage() {
 
   useEffect(() => {
     handleSearch(debouncedQuery, page);
+    return () => {
+      abortRef.current?.abort();
+    };
   }, [debouncedQuery, page, handleSearch]);
 
   return (
