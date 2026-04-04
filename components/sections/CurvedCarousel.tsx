@@ -133,12 +133,6 @@ export function CurvedCarousel({ movies }: CurvedCarouselProps) {
                 }}
               >
                 <div className="w-full h-full relative group">
-                  {isActive && (
-                    <TrailerAutoplay
-                      id={movie.id}
-                      type={movie.mediaType || "movie"}
-                    />
-                  )}
                   <Image
                     src={getTMDBImageUrl(
                       movie.backdropPath || movie.posterPath,
@@ -149,6 +143,12 @@ export function CurvedCarousel({ movies }: CurvedCarouselProps) {
                     priority={isActive}
                     className={`object-cover transition-transform duration-700 group-hover:scale-105 ${isActive ? "mask-image-gradient" : ""}`}
                   />
+                  {isActive && (
+                    <TrailerAutoplay
+                      id={movie.id}
+                      type={movie.mediaType || "movie"}
+                    />
+                  )}
 
                   {/* Dim inactive chain links */}
                   {!isActive && (

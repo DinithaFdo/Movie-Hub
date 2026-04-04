@@ -3,17 +3,18 @@
 import { useEffect, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import { usePreferencesStore } from "@/stores/preferences";
+import { playModernUiSound } from "@/utils/sound-effects";
 import type { MediaType } from "@/types/movie";
 
 export function TrailerAutoplay({ id, type }: { id: number; type: MediaType }) {
   const { preferences } = usePreferencesStore();
   const [videoKey, setVideoKey] = useState<string | null>(null);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(!preferences.enableClickSounds);
   const [showVideo, setShowVideo] = useState(false);
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
-    
+
     if (preferences.enableAutoplay) {
       // Delay fetching and showing by 2 seconds so it doesn't interrupt navigation
       timeout = setTimeout(async () => {
@@ -37,21 +38,34 @@ export function TrailerAutoplay({ id, type }: { id: number; type: MediaType }) {
     };
   }, [id, type, preferences.enableAutoplay]);
 
+  useEffect(() => {
+    setIsMuted(!preferences.enableClickSounds);
+  }, [preferences.enableClickSounds, videoKey]);
+
   if (!showVideo || !videoKey || !preferences.enableAutoplay) return null;
 
   return (
-    <div className="absolute inset-x-0 bottom-0 top-0 z-0 overflow-hidden pointer-events-none rounded-[inherit]">
+    <div className="absolute inset-x-0 bottom-0 top-0 z-30 overflow-hidden pointer-events-none rounded-[inherit]">
       <div className="absolute inset-0 bg-black" />
       <iframe
+        key={`${videoKey}-${isMuted ? "muted" : "unmuted"}`}
         className="absolute top-1/2 left-1/2 w-[150%] h-[150%] -translate-x-1/2 -translate-y-1/2 pointer-events-none object-cover opacity-80"
-        src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&mute=${isMuted ? 1 : 0}&controls=0&loop=1&playlist=${videoKey}&playsinline=1`}
+        src={`https://www.youtube-nocookie.com/embed/${videoKey}?autoplay=1&mute=${isMuted ? 1 : 0}&controls=0&loop=1&playlist=${videoKey}&playsinline=1`}
         allow="autoplay; encrypted-media"
       />
-      
+
       {/* Unmute Button Overlay */}
-      <button 
-        onClick={(e) => {
+      <button
+        type="button"
+        onPointerDown={(e) => {
           e.stopPropagation();
+        }}
+        onClick={async (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          if (preferences.enableClickSounds) {
+            void playModernUiSound("toggle");
+          }
           setIsMuted(!isMuted);
         }}
         className="absolute top-4 right-4 z-50 pointer-events-auto w-10 h-10 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:text-[#D4FF3E] hover:scale-105 transition-all shadow-xl backdrop-blur-md"

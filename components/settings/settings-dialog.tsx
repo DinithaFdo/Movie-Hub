@@ -3,7 +3,6 @@
 import { Play, Sparkles, X } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { usePreferencesStore } from "@/stores/preferences";
-import { playModernUiSound } from "@/utils/sound-effects";
 
 interface SettingsDialogProps {
   children: React.ReactNode;
@@ -83,11 +82,9 @@ export function SettingsDialog({
                     <Sparkles size={20} />
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-sm">
-                      Click Sounds
-                    </h4>
+                    <h4 className="text-white font-bold text-sm">Sounds</h4>
                     <p className="text-[#8A8A8E] text-xs font-medium max-w-[200px]">
-                      Add subtle futuristic sounds to buttons and navigation
+                      Enable UI and trailer interaction sounds
                     </p>
                   </div>
                 </div>
@@ -103,26 +100,6 @@ export function SettingsDialog({
                   <span
                     className={`inline-block h-4 w-4 transform rounded-full bg-black transition-transform ${preferences.enableClickSounds ? "translate-x-6" : "translate-x-1"}`}
                   />
-                </button>
-              </div>
-
-              <div className="flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h4 className="text-white font-bold text-sm">
-                    Test click sound
-                  </h4>
-                  <p className="text-[#8A8A8E] text-xs font-medium max-w-[240px]">
-                    Quickly verify the sound effect without leaving settings.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    void playModernUiSound("toggle");
-                  }}
-                  className="inline-flex items-center justify-center rounded-full border border-[#D4FF3E]/30 bg-[#D4FF3E]/10 px-4 py-2 text-sm font-bold text-[#D4FF3E] transition-all duration-300 hover:bg-[#D4FF3E] hover:text-black hover:scale-105"
-                >
-                  Play test sound
                 </button>
               </div>
             </div>

@@ -10,6 +10,8 @@ import {
 import type { MovieSummary } from "@/types/movie";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 function normalizeText(value: string): string {
   return value
@@ -124,7 +126,7 @@ export async function GET(request: NextRequest) {
     if (payload.results.length > 0) {
       return NextResponse.json(payload, {
         headers: {
-          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
+          "Cache-Control": "no-store, max-age=0, must-revalidate",
         },
       });
     }
@@ -139,7 +141,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(fallbackPayload, {
       headers: {
-        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
+        "Cache-Control": "no-store, max-age=0, must-revalidate",
       },
     });
   } catch {
@@ -148,7 +150,7 @@ export async function GET(request: NextRequest) {
       {
         status: 200,
         headers: {
-          "Cache-Control": "no-store",
+          "Cache-Control": "no-store, max-age=0, must-revalidate",
         },
       },
     );

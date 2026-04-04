@@ -3,12 +3,12 @@ export type UiSoundVariant = "nav" | "toggle" | "page";
 function getFrequency(variant: UiSoundVariant): [number, number] {
   switch (variant) {
     case "toggle":
-      return [220, 440];
+      return [2500, 1200];
     case "page":
-      return [360, 520];
+      return [2200, 900];
     case "nav":
     default:
-      return [280, 420];
+      return [2000, 750];
   }
 }
 
@@ -34,27 +34,27 @@ export async function playModernUiSound(variant: UiSoundVariant = "nav") {
   const [baseFrequency, accentFrequency] = getFrequency(variant);
   const now = context.currentTime;
 
-  oscillator.type = "triangle";
+  oscillator.type = "square";
   oscillator.frequency.setValueAtTime(baseFrequency, now);
   oscillator.frequency.exponentialRampToValueAtTime(
-    baseFrequency * 1.18,
-    now + 0.045,
+    baseFrequency * 0.72,
+    now + 0.02,
   );
 
-  secondaryOscillator.type = "sine";
+  secondaryOscillator.type = "triangle";
   secondaryOscillator.frequency.setValueAtTime(accentFrequency, now);
   secondaryOscillator.frequency.exponentialRampToValueAtTime(
-    accentFrequency * 1.06,
-    now + 0.05,
+    accentFrequency * 0.68,
+    now + 0.02,
   );
 
   filter.type = "highpass";
-  filter.frequency.value = 180;
-  filter.Q.value = 0.8;
+  filter.frequency.value = 1100;
+  filter.Q.value = 0.6;
 
   gainNode.gain.setValueAtTime(0.0001, now);
-  gainNode.gain.exponentialRampToValueAtTime(0.12, now + 0.01);
-  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+  gainNode.gain.exponentialRampToValueAtTime(0.03, now + 0.003);
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
 
   oscillator.connect(filter);
   secondaryOscillator.connect(filter);
@@ -63,8 +63,8 @@ export async function playModernUiSound(variant: UiSoundVariant = "nav") {
 
   oscillator.start(now);
   secondaryOscillator.start(now);
-  oscillator.stop(now + 0.15);
-  secondaryOscillator.stop(now + 0.15);
+  oscillator.stop(now + 0.035);
+  secondaryOscillator.stop(now + 0.035);
 
   oscillator.onended = () => {
     context.close().catch(() => undefined);
