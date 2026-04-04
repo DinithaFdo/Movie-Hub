@@ -18,7 +18,9 @@ export default function TVPage() {
     const fetchShows = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/tv?page=${page}`);
+        const response = await fetch(`/api/tv?page=${page}`, {
+          cache: "no-store",
+        });
         const data = (await response.json()) as MovieSummary[];
         setShows(data);
         setHasMore(data.length > 0);
@@ -39,7 +41,9 @@ export default function TVPage() {
     setIsLoadingMore(true);
 
     try {
-      const response = await fetch(`/api/tv?page=${nextPage}`);
+      const response = await fetch(`/api/tv?page=${nextPage}`, {
+        cache: "no-store",
+      });
       const data = (await response.json()) as MovieSummary[];
 
       if (data.length === 0) {

@@ -18,7 +18,9 @@ export default function MoviesPage() {
     const fetchMovies = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/movies?page=${page}`);
+        const response = await fetch(`/api/movies?page=${page}`, {
+          cache: "no-store",
+        });
         const data = (await response.json()) as MovieSummary[];
         setMovies(data);
         setHasMore(data.length > 0);
@@ -39,7 +41,9 @@ export default function MoviesPage() {
     setIsLoadingMore(true);
 
     try {
-      const response = await fetch(`/api/movies?page=${nextPage}`);
+      const response = await fetch(`/api/movies?page=${nextPage}`, {
+        cache: "no-store",
+      });
       const data = (await response.json()) as MovieSummary[];
 
       if (data.length === 0) {
