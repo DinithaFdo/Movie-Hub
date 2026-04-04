@@ -76,8 +76,14 @@ export function StackedCarousel({ movies }: StackedCarouselProps) {
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={0.2}
                   onDragEnd={(e, { offset: dragOffset }) => {
-                    if (dragOffset.x < -50) handleNext();
-                    else if (dragOffset.x > 50) handlePrev();
+                    void e;
+                    if (dragOffset.x < -50) {
+                      if (navigator.vibrate) navigator.vibrate(15);
+                      handleNext();
+                    } else if (dragOffset.x > 50) {
+                      if (navigator.vibrate) navigator.vibrate(15);
+                      handlePrev();
+                    }
                   }}
                   className="absolute w-[240px] md:w-[320px] aspect-[2/3] rounded-[2rem] overflow-hidden shadow-2xl cursor-pointer"
                   onClick={() => {

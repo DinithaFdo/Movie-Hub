@@ -8,6 +8,9 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/utils/helpers";
 import { usePreloader } from "@/components/context/preloader-context";
 import { LiveSearch } from "@/components/search/live-search";
+import { SettingsDialog } from "@/components/settings/settings-dialog";
+import { Settings } from "lucide-react";
+import { useUIStore } from "@/stores/ui";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -19,12 +22,16 @@ const navItems = [
 export function AppNavbar() {
   const pathname = usePathname();
   const { hasLoaded } = usePreloader();
+  const { isTheaterMode } = useUIStore();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <motion.header 
-      className="absolute top-0 left-0 right-0 z-50 pt-6 px-4 md:px-12 flex items-center justify-between pointer-events-auto"
+      initial={{ opacity: 1, y: 0 }}
+      animate={{ opacity: isTheaterMode ? 0 : 1, y: isTheaterMode ? -50 : 0 }}
+      transition={{ duration: 0.5 }}
+      className={`absolute top-0 left-0 right-0 z-50 pt-6 px-4 md:px-12 flex items-center justify-between ${isTheaterMode ? 'pointer-events-none' : 'pointer-events-auto'}`}
     >
       {/* Left: Bold Text Logo with layoutId linking to Preloader */}
       <div className="md:flex-1 flex justify-start basis-0">
@@ -83,6 +90,12 @@ export function AppNavbar() {
            />
         </motion.div>
 
+        <SettingsDialog>
+          <button className="hidden md:flex p-2 text-white bg-white/5 rounded-full backdrop-blur-md hover:bg-[#D4FF3E] hover:text-black transition-colors">
+            <Settings size={20} />
+          </button>
+        </SettingsDialog>
+
         {/* Mobile Hamburger Button */}
         <button 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -122,6 +135,23 @@ export function AppNavbar() {
                 </Link>
               </motion.div>
             ))}
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="mt-8"
+            >
+              <SettingsDialog>
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 text-2xl font-bold text-white hover:text-[#D4FF3E] transition-colors"
+                >
+                  <Settings size={28} />
+                  Settings
+                </button>
+              </SettingsDialog>
+            </motion.div>
           </div>
         </motion.div>
       )}

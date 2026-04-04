@@ -6,10 +6,13 @@ import {
   getTopRatedMovies,
 } from "@/services/tmdb";
 import { CurvedCarousel } from "@/components/sections/CurvedCarousel";
-import { FeaturesGrid } from "@/components/sections/features-grid";
-import { StackedCarousel } from "@/components/sections/stacked-carousel";
-import { TabbedGrid } from "@/components/sections/tabbed-grid";
 import { NewsletterFooter } from "@/components/layout/newsletter-footer";
+import dynamic from "next/dynamic";
+
+const FeaturesGrid = dynamic(() => import("@/components/sections/features-grid").then(mod => mod.FeaturesGrid), { ssr: true });
+const StackedCarousel = dynamic(() => import("@/components/sections/stacked-carousel").then(mod => mod.StackedCarousel), { ssr: true });
+const TabbedGrid = dynamic(() => import("@/components/sections/tabbed-grid").then(mod => mod.TabbedGrid), { ssr: true });
+const ContinueWatching = dynamic(() => import("@/components/sections/continue-watching").then(mod => mod.ContinueWatching), { ssr: true });
 
 export const revalidate = 3600; // ISR - revalidate every hour
 
@@ -34,6 +37,7 @@ export default async function Home() {
       <div className="pointer-events-none absolute right-0 top-[40%] -z-10 h-[600px] w-[600px] rounded-full bg-[#D4FF3E]/5 blur-[150px]" />
 
       <CurvedCarousel movies={trendingMoviesData} />
+      <ContinueWatching />
       <FeaturesGrid />
       <StackedCarousel movies={topRatedMoviesData} />
       <TabbedGrid movies={popularMoviesData} tvShows={trendingTVData} />

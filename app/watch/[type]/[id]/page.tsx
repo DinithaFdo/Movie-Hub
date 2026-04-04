@@ -6,6 +6,7 @@ import { Clock, Star, Info, Play } from "lucide-react";
 
 import { SeasonSelector } from "@/components/watch/season-selector";
 import { WatchActions } from "@/components/watch/watch-actions";
+import { TheaterPlayer } from "@/components/watch/theater-player";
 import { getMediaDetails, getTMDBImageUrl } from "@/lib/tmdb";
 import { buildVidSrcUrl } from "@/lib/vidsrc";
 import type { MediaType, CastMember, MediaDetail } from "@/types/movie";
@@ -97,18 +98,7 @@ export default async function WatchPage({
 
       <main className="relative z-10 mx-auto w-full max-w-[1800px] overflow-x-clip px-4 pt-32 pb-20 md:px-8 lg:px-12">
         
-        {/* Massive Player Container with Dribbble Styling */}
-        <div className="group relative mx-auto aspect-video w-full max-w-[1400px] overflow-hidden rounded-[2.5rem] md:rounded-[4rem] border border-white/5 bg-black shadow-[0_40px_100px_-20px_rgba(212,255,62,0.15)] ring-[2px] ring-white/5">
-          <iframe
-            src={streamUrl}
-            title={`MovieHub Player - ${details.title}`}
-            className="absolute inset-0 h-full w-full bg-black"
-            allowFullScreen
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            referrerPolicy="no-referrer"
-            sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
-          />
-        </div>
+        <TheaterPlayer streamUrl={streamUrl} title={details.title} />
 
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_400px] mt-16 max-w-[1400px] mx-auto">
           

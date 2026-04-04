@@ -13,6 +13,7 @@ interface UserPreferences {
   enableNotifications: boolean;
   enableAnalytics: boolean;
   itemsPerPage: number;
+  enableAutoplay: boolean;
 }
 
 interface PreferencesStore {
@@ -34,6 +35,7 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   enableNotifications: true,
   enableAnalytics: true,
   itemsPerPage: 20,
+  enableAutoplay: true,
 };
 
 export const usePreferencesStore = create<PreferencesStore>()(

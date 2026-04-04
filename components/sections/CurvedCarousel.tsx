@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Clock, Calendar, Globe } from "lucide-react";
 import { getTMDBImageUrl } from "@/services/tmdb";
 import type { MovieSummary } from "@/types/movie";
+import { TrailerAutoplay } from "@/components/sections/trailer-autoplay";
 
 interface CurvedCarouselProps {
   movies: MovieSummary[];
@@ -99,8 +100,14 @@ export function CurvedCarousel({ movies }: CurvedCarouselProps) {
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.2}
                 onDragEnd={(e, { offset: dragOffset }) => {
-                  if (dragOffset.x < -50) paginate(1);
-                  else if (dragOffset.x > 50) paginate(-1);
+                  void e;
+                  if (dragOffset.x < -50) {
+                    if (navigator.vibrate) navigator.vibrate(15);
+                    paginate(1);
+                  } else if (dragOffset.x > 50) {
+                    if (navigator.vibrate) navigator.vibrate(15);
+                    paginate(-1);
+                  }
                 }}
                 onClick={() => {
                   if (offset !== 0 && opacity > 0) paginate(offset > 0 ? 1 : -1);
@@ -112,12 +119,15 @@ export function CurvedCarousel({ movies }: CurvedCarouselProps) {
                 }}
               >
                 <div className="w-full h-full relative group">
+                  {isActive && (
+                     <TrailerAutoplay id={movie.id} type={movie.mediaType || 'movie'} />
+                  )}
                   <Image 
                     src={getTMDBImageUrl(movie.backdropPath || movie.posterPath, isActive ? 1280 : 780)} 
                     alt={movie.title} 
                     fill 
                     priority={isActive}
-                    className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                    className={`object-cover transition-transform duration-700 group-hover:scale-105 ${isActive ? 'mask-image-gradient' : ''}`} 
                   />
                   
                   {/* Dim inactive chain links */}
