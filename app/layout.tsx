@@ -26,6 +26,19 @@ export const metadata: Metadata = {
   title: "Movie-Hub",
   description:
     "Discover the Series Streaming Experience with Absolutely No Ads",
+  openGraph: {
+    title: "Movie-Hub",
+    description:
+      "Discover the Series Streaming Experience with Absolutely No Ads",
+    images: ["/movie-hub-banner.webp"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Movie-Hub",
+    description:
+      "Discover the Series Streaming Experience with Absolutely No Ads",
+    images: ["/movie-hub-banner.webp"],
+  },
 };
 
 export const viewport: Viewport = {
