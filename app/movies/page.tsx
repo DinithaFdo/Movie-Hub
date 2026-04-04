@@ -49,7 +49,9 @@ export default function MoviesPage() {
 
       setMovies((current) => {
         const existingIds = new Set(current.map((movie) => movie.id));
-        const uniqueNewMovies = data.filter((movie) => !existingIds.has(movie.id));
+        const uniqueNewMovies = data.filter(
+          (movie) => !existingIds.has(movie.id),
+        );
         return [...current, ...uniqueNewMovies];
       });
       setPage(nextPage);
