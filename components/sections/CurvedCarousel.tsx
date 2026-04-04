@@ -44,7 +44,7 @@ export function CurvedCarousel({ movies }: CurvedCarouselProps) {
   };
 
   return (
-    <div className="relative w-full overflow-hidden py-8 md:py-16 mt-24 md:mt-32 flex flex-col items-center justify-start min-h-[700px] md:min-h-[850px] z-10 bg-[#0D0D0F]">
+    <div className="relative w-full overflow-hidden py-8 md:py-16 mt-24 md:mt-32 flex flex-col items-center justify-start min-h-[700px] md:min-h-[850px] z-10">
       
       {/* Restored Hero Title Section Overlaying the Top Edge */}
       <div className="text-center z-30 mb-8 flex flex-col items-center px-4 max-w-4xl">
@@ -73,7 +73,7 @@ export function CurvedCarousel({ movies }: CurvedCarouselProps) {
             // Physical placement as strict chain links (x mapping)
             // 105% width pushes each card exactly next to the previous with a 5% gap
             const xOffset = offset * 105; 
-            const opacity = Math.abs(offset) > 1 ? 0 : 1; 
+            const opacity = Math.abs(offset) > 2 ? 0 : 1; 
 
             // Creating the subtle "U-like" chain structure
             const zOffset = Math.abs(offset) * -120; // Pushes adjacent links back slightly
@@ -95,10 +95,17 @@ export function CurvedCarousel({ movies }: CurvedCarouselProps) {
                   scale: 1 // CRITICAL: ALL cards stay exact same physical size
                 }}
                 transition={springTransition}
+                drag={isActive ? "x" : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(e, { offset: dragOffset }) => {
+                  if (dragOffset.x < -50) paginate(1);
+                  else if (dragOffset.x > 50) paginate(-1);
+                }}
                 onClick={() => {
                   if (offset !== 0 && opacity > 0) paginate(offset > 0 ? 1 : -1);
                 }}
-                className="absolute shadow-2xl origin-center overflow-hidden w-[85%] md:w-[45%] lg:w-[40%] h-[100%] rounded-3xl md:rounded-[2.5rem]"
+                className="absolute shadow-2xl origin-center overflow-hidden w-[65%] sm:w-[50%] md:w-[45%] lg:w-[40%] h-[100%] rounded-3xl md:rounded-[2.5rem]"
                 style={{
                   clipPath: getClipPath(offset),
                   cursor: isActive ? "default" : "pointer"

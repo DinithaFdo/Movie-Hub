@@ -95,20 +95,34 @@ export function AppNavbar() {
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute top-full left-0 right-0 mt-4 mx-4 bg-[#1A1A1D]/95 backdrop-blur-3xl border border-white/10 rounded-[2rem] p-6 flex flex-col gap-4 shadow-2xl z-50 pointer-events-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 bg-[#0D0D0F] z-[60] flex flex-col justify-center px-8"
         >
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-lg font-bold text-white/80 hover:text-[#D4FF3E] transition-colors py-2 border-b border-white/5 last:border-0"
-            >
-              {item.label}
-            </Link>
-          ))}
+          <button 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="absolute top-6 right-4 md:right-12 p-3 text-white bg-white/10 rounded-full hover:bg-[#D4FF3E] hover:text-black transition-colors"
+          >
+            <X size={24} />
+          </button>
+          <div className="flex flex-col gap-6 w-full max-w-md mx-auto">
+            {navItems.map((item, idx) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+              >
+                <Link
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block text-5xl sm:text-6xl font-black tracking-tight text-white hover:text-[#D4FF3E] transition-colors py-2 border-b border-white/10"
+                >
+                  {item.label}
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
       )}
     </motion.header>

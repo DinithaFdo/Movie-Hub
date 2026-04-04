@@ -180,43 +180,51 @@ export function EnhancedAppNavbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Overlay */}
         {isMenuOpen && (
           <div
-            ref={menuRef}
-            className="absolute top-full left-0 right-0 border-t border-(--border-default)/50 bg-(--bg-base)/95 backdrop-blur-2xl md:hidden animate-in fade-in slide-in-from-top-2 duration-300"
+            className="fixed inset-0 z-40 bg-(--bg-base) flex flex-col md:hidden animate-in fade-in slide-in-from-bottom-8 duration-300"
           >
-            <div className="max-w-7xl mx-auto px-4 py-4 space-y-2">
-              <div className="mb-4">
-                <LiveSearch className="" />
-              </div>
-              <MobileNavLink
-                href="/"
-                label="Home"
-                active={isActiveRoute("/")}
-              />
-              <MobileNavLink
-                href="/movies"
-                label="Movies"
-                active={isActiveRoute("/movies")}
-              />
-              <MobileNavLink
-                href="/tv"
-                label="TV Shows"
-                active={isActiveRoute("/tv")}
-              />
-              <div className="border-t border-(--border-default)/30 pt-2 mt-2">
+            <div className="flex-1 flex flex-col justify-center px-8 space-y-8 mt-20 pb-20 overflow-y-auto">
+              <nav className="flex flex-col gap-6">
+                <MobileNavLink
+                  href="/"
+                  label="Home"
+                  active={isActiveRoute("/")}
+                  onClick={() => setIsMenuOpen(false)}
+                />
+                <MobileNavLink
+                  href="/movies"
+                  label="Movies"
+                  active={isActiveRoute("/movies")}
+                  onClick={() => setIsMenuOpen(false)}
+                />
+                <MobileNavLink
+                  href="/tv"
+                  label="TV Shows"
+                  active={isActiveRoute("/tv")}
+                  onClick={() => setIsMenuOpen(false)}
+                />
+                <div className="h-px w-12 bg-(--border-default)/50 my-4" />
                 <MobileNavLink
                   href="/favorites"
                   label="Favorites"
                   active={isActiveRoute("/favorites")}
+                  onClick={() => setIsMenuOpen(false)}
                 />
                 <MobileNavLink
                   href="/watch-history"
                   label="Watch History"
                   active={isActiveRoute("/watch-history")}
+                  onClick={() => setIsMenuOpen(false)}
                 />
-              </div>
+              </nav>
+            </div>
+            
+            <div className="p-8 pb-12 mt-auto">
+               <div className="flex items-center gap-4 text-(--text-secondary)">
+                  <p className="text-xs font-bold tracking-[0.2em] uppercase text-(--primary)">MovieHub UI/UX</p>
+               </div>
             </div>
           </div>
         )}
@@ -267,19 +275,22 @@ function MobileNavLink({
   href,
   label,
   active,
+  onClick,
 }: {
   href: string;
   label: string;
   active?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={cn(
-        "block px-3 py-2 text-sm font-semibold rounded-lg transition-all duration-300",
+        "block py-2 text-4xl sm:text-5xl font-black tracking-tight transition-all duration-300",
         active
-          ? "bg-(--primary)/15 text-(--primary) border-l-2 border-(--primary)"
-          : "text-(--text-secondary) hover:bg-(--bg-slight) hover:text-(--text-primary)",
+          ? "text-(--primary) pl-4 border-l-[6px] border-(--primary)"
+          : "text-(--text-secondary) hover:text-(--text-primary) hover:pl-2",
       )}
     >
       {label}

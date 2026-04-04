@@ -8,7 +8,7 @@ interface PageShellProps {
 export function PageShell({ children, className }: PageShellProps) {
   return (
     <main
-      className={cn("relative min-h-screen overflow-x-clip bg-[#0D0D0F] pt-32 pb-24", className)}
+      className={cn("relative min-h-screen overflow-x-clip bg-[#0D0D0F] pt-24 md:pt-32 pb-16 md:pb-24", className)}
     >
       <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-[#1A1A1D]/30 to-transparent" />
       {children}

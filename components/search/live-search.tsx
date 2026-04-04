@@ -61,6 +61,7 @@ export function LiveSearch({ className, isExpanded, onFocus, onBlur }: { classNa
       return;
     }
 
+    setResults([]);
     setIsLoading(true);
 
     debounceRef.current = window.setTimeout(async () => {
@@ -78,12 +79,12 @@ export function LiveSearch({ className, isExpanded, onFocus, onBlur }: { classNa
           results: MovieSummary[];
         };
         setResults((payload.results || []).slice(0, 6));
+        setIsLoading(false);
       } catch (error: unknown) {
         if ((error as { name?: string }).name !== "AbortError") {
           setResults([]);
+          setIsLoading(false);
         }
-      } finally {
-        setIsLoading(false);
       }
     }, 500);
   }
@@ -141,7 +142,11 @@ export function LiveSearch({ className, isExpanded, onFocus, onBlur }: { classNa
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             className="absolute z-50 mt-3 w-[280px] md:w-[320px] right-0 overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#1A1A1D]/95 backdrop-blur-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.8)]"
           >
-            {results.length > 0 ? (
+            {isLoading ? (
+              <div className="py-8 flex justify-center">
+                <Loader2 className="h-6 w-6 animate-spin text-[#D4FF3E]" />
+              </div>
+            ) : results.length > 0 ? (
               <div className="py-2">
                 {results.map((movie) => (
                   <Link

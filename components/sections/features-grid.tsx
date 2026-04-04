@@ -23,7 +23,7 @@ export function FeaturesGrid() {
   ];
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 md:px-12 py-20 pb-32">
+    <section className="w-full max-w-7xl mx-auto px-4 md:px-12 py-12 md:py-20 pb-16 md:pb-32">
       <div className="text-center mb-16">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
@@ -44,7 +44,7 @@ export function FeaturesGrid() {
         </motion.p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
         {features.map((feature, idx) => (
           <motion.div
             key={feature.title}
@@ -53,13 +53,13 @@ export function FeaturesGrid() {
             viewport={{ once: true }}
             transition={{ delay: idx * 0.15 }}
             whileHover={{ y: -10 }}
-            className="group bg-[#1A1A1D] rounded-[2rem] p-8 transition-all hover:bg-[#202024] hover:shadow-[0_0_30px_rgba(212,255,62,0.1)] border border-transparent hover:border-[#D4FF3E]/30"
+            className="group bg-[#1A1A1D] rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-8 transition-all hover:bg-[#202024] hover:shadow-[0_0_30px_rgba(212,255,62,0.1)] border border-transparent hover:border-[#D4FF3E]/30"
           >
-            <div className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center mb-8 border border-white/5 group-hover:border-[#D4FF3E]/50 transition-colors">
-              <feature.icon className="w-6 h-6 text-[#D4FF3E]" />
+            <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-black/40 flex items-center justify-center mb-4 md:mb-8 border border-white/5 group-hover:border-[#D4FF3E]/50 transition-colors">
+              <feature.icon className="w-5 h-5 md:w-6 md:h-6 text-[#D4FF3E]" />
             </div>
-            <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-            <p className="text-[var(--text-secondary)] leading-relaxed">
+            <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-4">{feature.title}</h3>
+            <p className="text-sm md:text-base text-[var(--text-secondary)] leading-relaxed">
               {feature.description}
             </p>
           </motion.div>

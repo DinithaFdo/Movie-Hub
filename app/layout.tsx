@@ -20,8 +20,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Cinestream",
-  description: "Discover the Series Streaming Experience",
+  title: "Movie-Hub",
+  description: "Discover the Series Streaming Experience with Absolutely No Ads",
 };
 
 export const viewport: Viewport = {

@@ -26,7 +26,7 @@ export function StackedCarousel({ movies }: StackedCarouselProps) {
   });
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 md:px-12 py-20 overflow-hidden">
+    <section className="w-full max-w-7xl mx-auto px-4 md:px-12 py-12 md:py-20 overflow-hidden">
       <div className="text-center mb-16 relative z-10">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
@@ -72,6 +72,13 @@ export function StackedCarousel({ movies }: StackedCarouselProps) {
                   }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  drag={isCenter ? "x" : false}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.2}
+                  onDragEnd={(e, { offset: dragOffset }) => {
+                    if (dragOffset.x < -50) handleNext();
+                    else if (dragOffset.x > 50) handlePrev();
+                  }}
                   className="absolute w-[240px] md:w-[320px] aspect-[2/3] rounded-[2rem] overflow-hidden shadow-2xl cursor-pointer"
                   onClick={() => {
                     if (offset < 0) handlePrev();

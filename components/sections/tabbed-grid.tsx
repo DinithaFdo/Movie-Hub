@@ -16,11 +16,10 @@ interface TabbedGridProps {
 export function TabbedGrid({ movies, tvShows }: TabbedGridProps) {
   const [activeTab, setActiveTab] = useState("Movies");
   
-  const tabs = ["Movies", "TV Shows", "Animation", "Anime"];
+  const tabs = ["Movies", "TV Shows", "Anime"];
   
   const getActiveMedia = () => {
     if (activeTab === "TV Shows") return tvShows.slice(0, 16);
-    if (activeTab === "Animation") return movies.filter(m => m.voteAverage > 7.5).slice(0, 16);
     if (activeTab === "Anime") return tvShows.filter(t => t.voteAverage > 7.5).slice(0, 16);
     return movies.slice(0, 16);
   };
@@ -35,7 +34,7 @@ export function TabbedGrid({ movies, tvShows }: TabbedGridProps) {
   const safeBottomRow = bottomRowMedia.length < 8 ? [...tvShows.slice(0, 8), ...tvShows.slice(0, 8)] : bottomRowMedia;
 
   return (
-    <section className="w-full overflow-hidden py-8 md:py-20 pb-16 md:pb-32">
+    <section className="w-full overflow-hidden py-10 md:py-20 pb-8 md:pb-32">
       <div className="text-center mb-4 md:mb-12 px-4 relative z-10">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
@@ -57,11 +56,7 @@ export function TabbedGrid({ movies, tvShows }: TabbedGridProps) {
       </div>
 
       <div className="flex justify-center mb-8 md:mb-16 mx-auto w-full relative z-10">
-        <motion.div 
-          initial={{ width: 60, opacity: 0 }}
-          whileInView={{ width: "auto", opacity: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        <div 
           className="bg-[#1A1A1D] p-1.5 rounded-full flex justify-center items-center gap-1 border border-white/5 shadow-xl overflow-hidden whitespace-nowrap"
         >
           {tabs.map((tab) => {
@@ -86,7 +81,7 @@ export function TabbedGrid({ movies, tvShows }: TabbedGridProps) {
               </button>
             );
           })}
-        </motion.div>
+        </div>
       </div>
 
       {/* CSS Auto-Scrolling Marquees (Pause on Hover Native) */}
