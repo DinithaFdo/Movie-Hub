@@ -19,10 +19,21 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
+const rawAppUrl =
+  process.env.NEXT_PUBLIC_APP_URL?.trim() ||
+  process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() ||
+  process.env.VERCEL_URL?.trim();
+const normalizedAppUrl = rawAppUrl
+  ? rawAppUrl.startsWith("http")
+    ? rawAppUrl
+    : `https://${rawAppUrl}`
+  : undefined;
+const socialImageUrl = normalizedAppUrl
+  ? new URL("/movie-hub-banner.webp", normalizedAppUrl).toString()
+  : "/movie-hub-banner.webp";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-  ),
+  metadataBase: normalizedAppUrl ? new URL(normalizedAppUrl) : undefined,
   title: "Movie-Hub",
   description:
     "Discover the Series Streaming Experience with Absolutely No Ads",
@@ -30,14 +41,14 @@ export const metadata: Metadata = {
     title: "Movie-Hub",
     description:
       "Discover the Series Streaming Experience with Absolutely No Ads",
-    images: ["/movie-hub-banner.webp"],
+    images: [socialImageUrl],
   },
   twitter: {
     card: "summary_large_image",
     title: "Movie-Hub",
     description:
       "Discover the Series Streaming Experience with Absolutely No Ads",
-    images: ["/movie-hub-banner.webp"],
+    images: [socialImageUrl],
   },
 };
 
