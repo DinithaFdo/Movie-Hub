@@ -56,7 +56,7 @@ export function TheaterPlayer({
             setTheaterMode(!isTheaterMode);
           }}
           aria-pressed={isTheaterMode}
-          className="absolute top-6 right-6 z-20 flex items-center gap-2 bg-black/60 backdrop-blur-md px-4 py-2 border border-white/10 rounded-full text-white hover:text-[#D4FF3E] hover:border-[#D4FF3E]/50 transition-all duration-300 shadow-xl opacity-0 translate-y-[-10px] group-hover:opacity-100 group-hover:translate-y-0 hover:scale-105"
+          className="absolute top-4 right-4 md:top-6 md:right-6 z-20 flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-2 md:px-4 border border-white/10 rounded-full text-white hover:text-[#D4FF3E] hover:border-[#D4FF3E]/50 transition-all duration-300 shadow-xl opacity-100 translate-y-0 md:opacity-0 md:translate-y-[-10px] md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:scale-105"
         >
           {isTheaterMode ? (
             <>
