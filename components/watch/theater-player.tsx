@@ -42,8 +42,8 @@ export function TheaterPlayer({
           className="absolute inset-0 h-full w-full bg-black z-10"
           allowFullScreen
           allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-          referrerPolicy="no-referrer"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+          referrerPolicy="origin"
+  
         />
 
         {/* Theater Toggle Button */}

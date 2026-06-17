@@ -90,8 +90,11 @@ export function VidSrcPlayer({ src, title, onReady }: VidSrcPlayerProps) {
         className="w-full aspect-video"
         allowFullScreen
         allowTransparency
-        allow="autoplay; encrypted-media"
-        // Sandbox restrictions for security - only allow necessary permissions
+        // Prevent sending the page Referer header to the embed provider
+        referrerPolicy="no-referrer"
+        // Allow autoplay and encrypted media plus picture-in-picture/fullscreen
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+        // Sandbox restrictions for security - keep same-origin but allow popups/scripts
         sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
       />
 

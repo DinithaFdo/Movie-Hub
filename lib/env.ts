@@ -3,7 +3,7 @@ const runtimeConfig = {
   vidsrcBaseUrl:
     process.env.VIDSRC_BASE_URL ||
     process.env.NEXT_PUBLIC_VIDSRC_BASE_URL ||
-    "https://vidsrc.cc/v2/embed",
+    "https://vidsrc.to/embed",
 };
 
 export function getRequiredEnvValue(
