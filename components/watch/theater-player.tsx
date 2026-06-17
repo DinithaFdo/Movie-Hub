@@ -43,7 +43,7 @@ export function TheaterPlayer({
           allowFullScreen
           allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
           referrerPolicy="origin"
-  
+      
         />
 
         {/* Theater Toggle Button */}

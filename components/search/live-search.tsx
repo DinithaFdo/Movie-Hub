@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Search, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -11,8 +12,19 @@ import { cn } from "@/utils/helpers";
 import type { MovieSummary } from "@/types/movie";
 import { useSearchHistoryStore } from "@/stores/search-history";
 
-export function LiveSearch({ className, isExpanded, onFocus, onBlur }: { className?: string, isExpanded?: boolean, onFocus?: () => void, onBlur?: () => void }) {
+export function LiveSearch({
+  className,
+  isExpanded,
+  onFocus,
+  onBlur,
+}: {
+  className?: string;
+  isExpanded?: boolean;
+  onFocus?: () => void;
+  onBlur?: () => void;
+}) {
   const { addSearch } = useSearchHistoryStore();
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<MovieSummary[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -100,11 +112,15 @@ export function LiveSearch({ className, isExpanded, onFocus, onBlur }: { classNa
     if (nextQuery.length < 2) return;
 
     addSearch(nextQuery);
-    setShowResults(true);
+    setShowResults(false);
+    router.push(`/search?q=${encodeURIComponent(nextQuery)}`);
   }
 
   return (
-    <div ref={containerRef} className={cn("relative w-full transition-all duration-300", className)}>
+    <div
+      ref={containerRef}
+      className={cn("relative w-full transition-all duration-300", className)}
+    >
       <form className="relative group w-full" onSubmit={handleSubmit}>
         <div className="absolute inset-y-0 left-0 w-10 flex items-center justify-center pointer-events-none z-10">
           <Search className="h-[18px] w-[18px] transition-colors text-black" />
@@ -122,9 +138,9 @@ export function LiveSearch({ className, isExpanded, onFocus, onBlur }: { classNa
           placeholder="Search movies, tv shows..."
           className={cn(
             "h-10 rounded-full border text-sm font-bold focus:outline-none transition-all duration-300 shrink-0 placeholder:opacity-0 focus:placeholder:opacity-100",
-            isExpanded 
-              ? "w-[160px] sm:w-[260px] md:w-[320px] pl-10 pr-4 bg-[#D4FF3E] text-black border-transparent placeholder:text-black/60 focus:bg-[#D4FF3E] shadow-[0_0_20px_rgba(212,255,62,0.3)]" 
-              : "w-10 p-0 bg-[#D4FF3E] border-transparent text-transparent placeholder:text-transparent cursor-pointer hover:scale-105 shadow-md"
+            isExpanded
+              ? "w-[160px] sm:w-[260px] md:w-[320px] pl-10 pr-4 bg-[#D4FF3E] text-black border-transparent placeholder:text-black/60 focus:bg-[#D4FF3E] shadow-[0_0_20px_rgba(212,255,62,0.3)]"
+              : "w-10 p-0 bg-[#D4FF3E] border-transparent text-transparent placeholder:text-transparent cursor-pointer hover:scale-105 shadow-md",
           )}
         />
         {isLoading && isExpanded && (
@@ -136,7 +152,7 @@ export function LiveSearch({ className, isExpanded, onFocus, onBlur }: { classNa
 
       <AnimatePresence>
         {shouldShowPanel && isExpanded && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 10, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
@@ -151,7 +167,7 @@ export function LiveSearch({ className, isExpanded, onFocus, onBlur }: { classNa
                 {results.map((movie) => (
                   <Link
                     key={movie.id}
-                    href={`/watch/${movie.mediaType || 'movie'}/${movie.id}`}
+                    href={`/watch/${movie.mediaType || "movie"}/${movie.id}`}
                     className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-white/5 group border-b border-white/5 last:border-0"
                     onClick={() => {
                       addSearch(query.trim());
