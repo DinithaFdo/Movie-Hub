@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { MediaCard } from "@/components/cards/media-card";
 import { Pagination } from "@/components/ui/pagination";
-import { PageHeader, PageShell } from "@/components/layout/page-shell";
+import { PageShell } from "@/components/layout/page-shell";
 import { useDebounce, usePagination } from "@/hooks";
 import { useSearchHistoryStore } from "@/stores/search-history";
 import type { MovieSummary } from "@/types/movie";
